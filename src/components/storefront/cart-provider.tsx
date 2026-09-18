@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState, useTransition } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import type { CartView } from "@/server/cart";
 import {
@@ -45,6 +45,23 @@ export function CartProvider({
   const [cart, setCart] = useState(initialCart);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [pending, startTransition] = useTransition();
+  const lastServerCart = useRef(initialCart);
+
+  // The layout re-renders with a fresh server view after navigation (and after
+  // checkout converts the basket). Adopt it when it actually changed, so the
+  // header count cannot go stale, while still preferring local state between
+  // renders so an optimistic update is not clobbered.
+  useEffect(() => {
+    const previous = lastServerCart.current;
+    const changed =
+      previous.id !== initialCart.id ||
+      previous.itemCount !== initialCart.itemCount ||
+      previous.totalCents !== initialCart.totalCents;
+    if (changed) {
+      lastServerCart.current = initialCart;
+      setCart(initialCart);
+    }
+  }, [initialCart]);
 
   const run = useCallback(
     async <T,>(
