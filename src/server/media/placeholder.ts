@@ -51,6 +51,41 @@ export const PALETTES: Record<string, Palette> = {
   stone: { ground: "#EAE8E4", groundEdge: "#DAD7D1", body: "#9A958C", bodyShade: "#7C776E", accent: "#4E4A44" },
 };
 
+/**
+ * Re-tint a palette around a colourway swatch, keeping the studio ground from
+ * the product's own palette so a range still reads as one family.
+ */
+function tintPalette(base: Palette, hex: string): Palette {
+  const body = normaliseHex(hex);
+  return {
+    ground: base.ground,
+    groundEdge: base.groundEdge,
+    body,
+    bodyShade: shiftLightness(body, -0.18),
+    accent: shiftLightness(body, -0.34),
+  };
+}
+
+function normaliseHex(hex: string): string {
+  const value = hex.trim().replace("#", "");
+  if (value.length === 3) {
+    return `#${value[0]}${value[0]}${value[1]}${value[1]}${value[2]}${value[2]}`;
+  }
+  return `#${value.slice(0, 6).padEnd(6, "0")}`;
+}
+
+/** Move a colour towards black (negative) or white (positive). */
+function shiftLightness(hex: string, amount: number): string {
+  const value = normaliseHex(hex).slice(1);
+  const channels = [0, 2, 4].map((offset) => parseInt(value.slice(offset, offset + 2), 16));
+  const shifted = channels.map((channel) => {
+    const target = amount < 0 ? 0 : 255;
+    const next = Math.round(channel + (target - channel) * Math.abs(amount));
+    return Math.max(0, Math.min(255, next));
+  });
+  return `#${shifted.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+}
+
 /** Deterministic 32-bit hash so a slug always produces the same picture. */
 function hash(input: string): number {
   let h = 2166136261;
@@ -254,9 +289,12 @@ export function productImageSvg(options: {
   archetype: Archetype;
   palette: keyof typeof PALETTES;
   variant?: number;
+  /** A colourway swatch; the subject is re-tinted around it. */
+  tintHex?: string;
 }): string {
-  const { seed, archetype, palette, variant = 0 } = options;
-  const p = PALETTES[palette] ?? PALETTES.oat;
+  const { seed, archetype, palette, variant = 0, tintHex } = options;
+  const base = PALETTES[palette] ?? PALETTES.oat;
+  const p = tintHex ? tintPalette(base, tintHex) : base;
   const random = rng(hash(`${seed}:${variant}`));
   const angle = -8 + random() * 16;
   const groundY = 560 + random() * 30;

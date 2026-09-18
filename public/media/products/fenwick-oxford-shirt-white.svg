@@ -24,9 +24,9 @@
   <ellipse cx="300" cy="563" rx="210" ry="46" fill="url(#shadow)"/>
   <g transform="translate(300 380) rotate(-5.20) scale(1.16) translate(-300 -380)">
     
-        <path d="M300 250 L380 215 Q400 260 440 275 L415 335 L392 322 L392 560 Q400 585 375 585 L225 585 Q200 585 208 560 L208 322 L185 335 L160 275 Q200 260 220 215 L300 250 Z" fill="#9A958C"/>
-        <path d="M300 250 L380 215 Q400 260 440 275 L415 335 L392 322 L392 560 Q400 585 375 585 L300 585 Z" fill="#7C776E" opacity="0.35"/>
-        <path d="M262 228 Q300 268 338 228" fill="none" stroke="#4E4A44" stroke-width="5" opacity="0.5"/>
+        <path d="M300 250 L380 215 Q400 260 440 275 L415 335 L392 322 L392 560 Q400 585 375 585 L225 585 Q200 585 208 560 L208 322 L185 335 L160 275 Q200 260 220 215 L300 250 Z" fill="#F5F2EC"/>
+        <path d="M300 250 L380 215 Q400 260 440 275 L415 335 L392 322 L392 560 Q400 585 375 585 L300 585 Z" fill="#c9c6c2" opacity="0.35"/>
+        <path d="M262 228 Q300 268 338 228" fill="none" stroke="#a2a09c" stroke-width="5" opacity="0.5"/>
   </g>
   <rect width="600" height="720" filter="url(#grain)" opacity="0.6"/>
 </svg>

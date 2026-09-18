@@ -24,11 +24,11 @@
   <ellipse cx="300" cy="583" rx="210" ry="46" fill="url(#shadow)"/>
   <g transform="translate(300 380) rotate(4.35) scale(1.16) translate(-300 -380)">
     
-        <rect x="268" y="150" width="64" height="52" rx="12" fill="#20262A"/>
-        <path d="M246 202 L354 202 Q372 202 372 240 L372 540 Q372 584 328 584 L272 584 Q228 584 228 540 L228 240 Q228 202 246 202 Z" fill="#4A5257"/>
-        <path d="M300 202 L354 202 Q372 202 372 240 L372 540 Q372 584 328 584 L300 584 Z" fill="#333A3E" opacity="0.3"/>
-        <rect x="228" y="330" width="144" height="24" fill="#20262A" opacity="0.6"/>
-        <rect x="228" y="376" width="144" height="12" fill="#20262A" opacity="0.4"/>
+        <rect x="268" y="150" width="64" height="52" rx="12" fill="#774331"/>
+        <path d="M246 202 L354 202 Q372 202 372 240 L372 540 Q372 584 328 584 L272 584 Q228 584 228 540 L228 240 Q228 202 246 202 Z" fill="#B5654A"/>
+        <path d="M300 202 L354 202 Q372 202 372 240 L372 540 Q372 584 328 584 L300 584 Z" fill="#94533d" opacity="0.3"/>
+        <rect x="228" y="330" width="144" height="24" fill="#774331" opacity="0.6"/>
+        <rect x="228" y="376" width="144" height="12" fill="#774331" opacity="0.4"/>
   </g>
   <rect width="600" height="720" filter="url(#grain)" opacity="0.6"/>
 </svg>

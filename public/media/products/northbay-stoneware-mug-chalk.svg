@@ -24,10 +24,10 @@
   <ellipse cx="300" cy="584" rx="210" ry="46" fill="url(#shadow)"/>
   <g transform="translate(300 380) rotate(2.86) scale(1.16) translate(-300 -380)">
     
-        <path d="M400 320 Q460 320 460 380 Q460 440 400 440" fill="none" stroke="#7C776E" stroke-width="26"/>
-        <path d="M188 286 L400 286 L386 520 Q382 560 340 560 L248 560 Q206 560 202 520 Z" fill="#9A958C"/>
-        <path d="M294 286 L400 286 L386 520 Q382 560 340 560 L294 560 Z" fill="#7C776E" opacity="0.28"/>
-        <ellipse cx="294" cy="286" rx="106" ry="20" fill="#4E4A44" opacity="0.7"/>
+        <path d="M400 320 Q460 320 460 380 Q460 440 400 440" fill="none" stroke="#bfbbb3" stroke-width="26"/>
+        <path d="M188 286 L400 286 L386 520 Q382 560 340 560 L248 560 Q206 560 202 520 Z" fill="#E9E4DA"/>
+        <path d="M294 286 L400 286 L386 520 Q382 560 340 560 L294 560 Z" fill="#bfbbb3" opacity="0.28"/>
+        <ellipse cx="294" cy="286" rx="106" ry="20" fill="#9a9690" opacity="0.7"/>
   </g>
   <rect width="600" height="720" filter="url(#grain)" opacity="0.6"/>
 </svg>

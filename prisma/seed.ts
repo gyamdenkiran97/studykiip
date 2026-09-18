@@ -400,6 +400,9 @@ async function seedProducts(ctx: {
       );
       if (colourOptionIndex >= 0) {
         const colourValue = combo[colourOptionIndex];
+        const swatch = seed.options![colourOptionIndex].values.find(
+          (value) => value.value === colourValue,
+        )?.swatchHex;
         const url = writeSvg(
           `products/${seed.slug}-${slugify(colourValue)}.svg`,
           productImageSvg({
@@ -407,15 +410,17 @@ async function seedProducts(ctx: {
             archetype: seed.archetype,
             palette: seed.palette,
             variant: 10 + colourOptionIndex,
+            tintHex: swatch ?? undefined,
           }),
         );
         const existing = await prisma.productMedia.findFirst({
           where: { productId: product.id, url },
           select: { id: true },
         });
-        if (existing) {
-          await prisma.productMedia.update({ where: { id: existing.id }, data: { variantId: variant.id } });
-        } else {
+        // The image belongs to the colour, not to one size, so it stays bound to
+        // the first variant of that colour; the storefront matches it to every
+        // variant sharing the option value.
+        if (!existing) {
           await prisma.productMedia.create({
             data: {
               productId: product.id,

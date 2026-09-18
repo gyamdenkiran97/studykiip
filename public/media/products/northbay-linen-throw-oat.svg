@@ -25,8 +25,8 @@
   <g transform="translate(300 380) rotate(0.28) scale(1.16) translate(-300 -380)">
     
         <path d="M300 250 L380 215 Q400 260 440 275 L415 335 L392 322 L392 560 Q400 585 375 585 L225 585 Q200 585 208 560 L208 322 L185 335 L160 275 Q200 260 220 215 L300 250 Z" fill="#D8CDB8"/>
-        <path d="M300 250 L380 215 Q400 260 440 275 L415 335 L392 322 L392 560 Q400 585 375 585 L300 585 Z" fill="#BFB194" opacity="0.35"/>
-        <path d="M262 228 Q300 268 338 228" fill="none" stroke="#7A6E56" stroke-width="5" opacity="0.5"/>
+        <path d="M300 250 L380 215 Q400 260 440 275 L415 335 L392 322 L392 560 Q400 585 375 585 L300 585 Z" fill="#b1a897" opacity="0.35"/>
+        <path d="M262 228 Q300 268 338 228" fill="none" stroke="#8f8779" stroke-width="5" opacity="0.5"/>
   </g>
   <rect width="600" height="720" filter="url(#grain)" opacity="0.6"/>
 </svg>

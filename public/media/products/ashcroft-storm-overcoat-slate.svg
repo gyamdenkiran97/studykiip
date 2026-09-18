@@ -24,11 +24,11 @@
   <ellipse cx="300" cy="579" rx="210" ry="46" fill="url(#shadow)"/>
   <g transform="translate(300 380) rotate(7.15) scale(1.16) translate(-300 -380)">
     
-        <path d="M300 235 L395 205 Q425 250 455 270 L430 350 L408 338 L408 600 L192 600 L192 338 L170 350 L145 270 Q175 250 205 205 L300 235 Z" fill="#C8A882"/>
-        <path d="M300 235 L300 600 L408 600 L408 338 L430 350 L455 270 Q425 250 395 205 Z" fill="#A98862" opacity="0.3"/>
-        <rect x="292" y="250" width="16" height="350" fill="#7E5A3C" opacity="0.35"/>
-        <circle cx="300" cy="330" r="7" fill="#7E5A3C" opacity="0.6"/>
-        <circle cx="300" cy="420" r="7" fill="#7E5A3C" opacity="0.6"/>
+        <path d="M300 235 L395 205 Q425 250 455 270 L430 350 L408 338 L408 600 L192 600 L192 338 L170 350 L145 270 Q175 250 205 205 L300 235 Z" fill="#4A5257"/>
+        <path d="M300 235 L300 600 L408 600 L408 338 L430 350 L455 270 Q425 250 395 205 Z" fill="#3d4347" opacity="0.3"/>
+        <rect x="292" y="250" width="16" height="350" fill="#313639" opacity="0.35"/>
+        <circle cx="300" cy="330" r="7" fill="#313639" opacity="0.6"/>
+        <circle cx="300" cy="420" r="7" fill="#313639" opacity="0.6"/>
   </g>
   <rect width="600" height="720" filter="url(#grain)" opacity="0.6"/>
 </svg>
