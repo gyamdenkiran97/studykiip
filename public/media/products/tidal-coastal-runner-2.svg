@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 720" width="600" height="720" role="img">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E3EAE5"/>
+      <stop offset="1" stop-color="#CFDBD3"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.506" cy="0.34" r="0.62">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="shadow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#1A1713" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#1A1713" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="78"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.055"/></feComponentTransfer>
+    </filter>
+  </defs>
+
+  <rect width="600" height="720" fill="url(#bg)"/>
+  <rect width="600" height="720" fill="url(#glow)"/>
+  <ellipse cx="300" cy="577" rx="210" ry="46" fill="url(#shadow)"/>
+  <g transform="translate(300 380) rotate(-3.11) scale(1.16) translate(-300 -380)">
+    
+        <path d="M120 474 Q116 420 168 404 Q212 390 244 358 Q272 330 306 320 L306 268 Q306 250 328 250 L356 250 Q376 250 376 270 L376 334 Q410 350 438 384 Q468 418 470 456 L470 474 Z" fill="#2F5548"/>
+        <path d="M306 320 L306 474 L470 474 L470 456 Q468 418 438 384 Q410 350 376 334 L376 270 Q376 250 356 250 L328 250 Q306 250 306 268 Z" fill="#203B32" opacity="0.3"/>
+        <path d="M128 466 L472 466 Q484 466 484 486 Q484 512 452 512 L152 512 Q124 512 124 488 Q124 466 128 466 Z" fill="#14261F"/>
+        <path d="M124 490 L484 490 L484 496 Q484 512 452 512 L152 512 Q124 512 124 496 Z" fill="#203B32" opacity="0.45"/>
+        <path d="M248 356 Q278 372 302 400" fill="none" stroke="#E3EAE5" stroke-width="7" opacity="0.7"/>
+        <path d="M274 332 Q304 348 328 378" fill="none" stroke="#E3EAE5" stroke-width="7" opacity="0.7"/>
+        <path d="M300 306 Q330 322 354 354" fill="none" stroke="#E3EAE5" stroke-width="7" opacity="0.7"/>
+        <path d="M126 448 Q156 432 186 430" fill="none" stroke="#14261F" stroke-width="6" opacity="0.45"/>
+  </g>
+  <rect width="600" height="720" filter="url(#grain)" opacity="0.6"/>
+</svg>

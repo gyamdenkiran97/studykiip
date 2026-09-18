@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1100" width="1800" height="1100" role="img">
+  <defs>
+    <linearGradient id="eg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F0E3DE"/>
+      <stop offset="1" stop-color="#E4D0C8"/>
+    </linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="71"/></filter>
+    <filter id="grain2">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" seed="71"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.05"/></feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="1800" height="1100" fill="url(#eg)"/>
+  <g filter="url(#soft)"><circle cx="546" cy="388" r="419" fill="#B5654A" opacity="0.16"/><circle cx="1145" cy="826" r="391" fill="#8E4A33" opacity="0.14"/><circle cx="1403" cy="969" r="599" fill="#5E2E1E" opacity="0.15"/><circle cx="1152" cy="221" r="536" fill="#E4D0C8" opacity="0.21"/></g>
+  <path d="M0 731 Q 630 591 1800 791 L 1800 1100 L 0 1100 Z" fill="#8E4A33" opacity="0.14"/>
+  <rect width="1800" height="1100" filter="url(#grain2)" opacity="0.65"/>
+</svg>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 720" width="600" height="720" role="img">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#EAE8E4"/>
+      <stop offset="1" stop-color="#DAD7D1"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.373" cy="0.34" r="0.62">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="shadow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#1A1713" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#1A1713" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="45"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.055"/></feComponentTransfer>
+    </filter>
+  </defs>
+
+  <rect width="600" height="720" fill="url(#bg)"/>
+  <rect width="600" height="720" fill="url(#glow)"/>
+  <ellipse cx="300" cy="571" rx="210" ry="46" fill="url(#shadow)"/>
+  <g transform="translate(300 380) rotate(7.86) scale(1.16) translate(-300 -380)">
+    
+        <path d="M180 220 L420 220 L420 430 L180 430 Z" fill="#7C776E"/>
+        <rect x="192" y="232" width="216" height="186" fill="#EAE8E4" opacity="0.8"/>
+        <path d="M140 430 L460 430 L486 486 Q490 498 476 498 L124 498 Q110 498 114 486 Z" fill="#9A958C"/>
+        <rect x="250" y="452" width="100" height="8" rx="4" fill="#4E4A44" opacity="0.6"/>
+  </g>
+  <rect width="600" height="720" filter="url(#grain)" opacity="0.6"/>
+</svg>
