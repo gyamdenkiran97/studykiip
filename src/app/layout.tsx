@@ -3,17 +3,25 @@ import { Fraunces, Instrument_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
+/**
+ * Only the optical-size axis is requested: the design keeps SOFT and WONK at
+ * their defaults, and every extra axis makes the variable font file bigger for
+ * no visible difference.
+ */
 const display = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
   display: "swap",
-  axes: ["SOFT", "WONK", "opsz"],
+  // Axes and a fixed weight list are mutually exclusive: keeping the variable
+  // weight axis plus optical size is what the design actually uses.
+  axes: ["opsz"],
 });
 
 const sans = Instrument_Sans({
   subsets: ["latin"],
   variable: "--font-instrument",
   display: "swap",
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {

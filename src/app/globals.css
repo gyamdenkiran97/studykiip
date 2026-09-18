@@ -14,7 +14,10 @@
   --color-ink: #14120f;
   --color-ink-soft: #3d382f;
   --color-muted: #6f6759;
-  --color-muted-soft: #938a79;
+  /* 5.0:1 on paper and 4.58:1 on the deeper surface. The original, lighter
+     tone measured 3.24:1 and failed WCAG AA wherever it was used for the small
+     labels it was designed for. */
+  --color-muted-soft: #746b5b;
   --color-line: #e5e0d5;
   --color-line-strong: #cec7b8;
 
@@ -90,7 +93,9 @@
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 600;
-    font-variation-settings: "SOFT" 0, "WONK" 0, "opsz" 48;
+    /* Optical size only — the other axes stay at their defaults, so they are
+       not requested from the font service at all. */
+    font-variation-settings: "opsz" 48;
   }
 
   /* Visible, high-contrast focus for keyboard users only. */

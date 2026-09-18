@@ -60,8 +60,17 @@ function load() {
   }
   const env = parsed.data;
 
-  // A production deployment must not silently fall back to the mock processor.
-  if (env.NODE_ENV === "production") {
+  /**
+   * Production guards.
+   *
+   * Skipped while `next build` collects page configuration: compiling the app
+   * should not require production credentials, and the build machine is not
+   * the machine that will serve traffic. The same checks run when the server
+   * actually boots, which is the moment that matters.
+   */
+  const isBuildPhase = process.env.NEXT_PHASE === "phase-production-build";
+
+  if (env.NODE_ENV === "production" && !isBuildPhase) {
     if (env.PAYMENT_PROVIDER === "stripe" && (!env.STRIPE_SECRET_KEY || !env.STRIPE_WEBHOOK_SECRET)) {
       throw new Error("STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET are required when PAYMENT_PROVIDER=stripe");
     }
