@@ -1,0 +1,81 @@
+{
+  "$comment": "Required functionality and its verification status. Never delete a test to make the suite pass — fix the implementation.",
+  "updatedAt": "2026-09-18",
+  "summary": { "total": 0, "passing": 0, "failing": 0, "pending": 0 },
+  "suites": {
+    "unit": {
+      "runner": "vitest",
+      "command": "npm run test:unit",
+      "cases": [
+        { "id": "u-money-01", "name": "money arithmetic never uses floating point", "status": "pending" },
+        { "id": "u-money-02", "name": "percentage (basis points) discounts round half-up deterministically", "status": "pending" },
+        { "id": "u-price-01", "name": "effective price prefers a valid sale price", "status": "pending" },
+        { "id": "u-price-02", "name": "cart totals: subtotal, discount, shipping, tax, total", "status": "pending" },
+        { "id": "u-price-03", "name": "free shipping threshold applies at or above the limit", "status": "pending" },
+        { "id": "u-coupon-01", "name": "expired, inactive and future coupons are rejected", "status": "pending" },
+        { "id": "u-coupon-02", "name": "minimum subtotal and max discount caps are enforced", "status": "pending" },
+        { "id": "u-coupon-03", "name": "scoped coupons only discount matching line items", "status": "pending" },
+        { "id": "u-order-01", "name": "order state machine allows declared transitions", "status": "pending" },
+        { "id": "u-order-02", "name": "order state machine rejects undeclared transitions", "status": "pending" },
+        { "id": "u-rbac-01", "name": "role hierarchy grants the expected permissions", "status": "pending" },
+        { "id": "u-rbac-02", "name": "customers are denied every admin permission", "status": "pending" },
+        { "id": "u-slug-01", "name": "slug generation is stable and collision-safe", "status": "pending" },
+        { "id": "u-valid-01", "name": "Zod schemas reject malformed checkout payloads", "status": "pending" },
+        { "id": "u-rate-01", "name": "rate limiter blocks after the configured burst", "status": "pending" },
+        { "id": "u-search-01", "name": "search query parsing strips control characters and wildcards", "status": "pending" }
+      ]
+    },
+    "integration": {
+      "runner": "vitest",
+      "command": "npm run test:integration",
+      "requires": "PostgreSQL test database (TEST_DATABASE_URL)",
+      "cases": [
+        { "id": "i-inv-01", "name": "reservation decrements available stock", "status": "pending" },
+        { "id": "i-inv-02", "name": "concurrent checkouts cannot oversell the last unit", "status": "pending" },
+        { "id": "i-inv-03", "name": "cancelling an order releases its reservation", "status": "pending" },
+        { "id": "i-inv-04", "name": "every stock change writes an inventory transaction", "status": "pending" },
+        { "id": "i-cart-01", "name": "cart totals are recomputed from the database, not the client", "status": "pending" },
+        { "id": "i-cart-02", "name": "anonymous cart merges into the user cart on login", "status": "pending" },
+        { "id": "i-order-01", "name": "placing an order creates it in PENDING_PAYMENT and reserves stock", "status": "pending" },
+        { "id": "i-pay-01", "name": "webhook with a valid signature marks the order PAID", "status": "pending" },
+        { "id": "i-pay-02", "name": "webhook with an invalid signature is rejected", "status": "pending" },
+        { "id": "i-pay-03", "name": "replayed webhook events are idempotent", "status": "pending" },
+        { "id": "i-pay-04", "name": "a browser success redirect alone never marks an order paid", "status": "pending" },
+        { "id": "i-refund-01", "name": "refund updates payment, order totals and status", "status": "pending" },
+        { "id": "i-auth-01", "name": "passwords are stored hashed, never in plaintext", "status": "pending" },
+        { "id": "i-authz-01", "name": "IDOR: a user cannot read another user's order", "status": "pending" },
+        { "id": "i-authz-02", "name": "a customer calling an admin action is rejected server-side", "status": "pending" },
+        { "id": "i-review-01", "name": "verified-purchase flag is derived from delivered orders", "status": "pending" },
+        { "id": "i-review-02", "name": "duplicate reviews per product per user are rejected", "status": "pending" },
+        { "id": "i-audit-01", "name": "admin mutations write an audit log entry", "status": "pending" },
+        { "id": "i-search-01", "name": "search matches title, brand and tags with typo tolerance", "status": "pending" }
+      ]
+    },
+    "e2e": {
+      "runner": "playwright",
+      "command": "npm run test:e2e",
+      "cases": [
+        { "id": "e-01", "name": "user registration", "status": "pending" },
+        { "id": "e-02", "name": "login", "status": "pending" },
+        { "id": "e-03", "name": "product search", "status": "pending" },
+        { "id": "e-04", "name": "product variant selection updates price, SKU and availability", "status": "pending" },
+        { "id": "e-05", "name": "add to cart", "status": "pending" },
+        { "id": "e-06", "name": "wishlist add and remove", "status": "pending" },
+        { "id": "e-07", "name": "checkout requires authentication", "status": "pending" },
+        { "id": "e-08", "name": "payment test flow", "status": "pending" },
+        { "id": "e-09", "name": "order confirmation", "status": "pending" },
+        { "id": "e-10", "name": "customer order history", "status": "pending" },
+        { "id": "e-11", "name": "admin login", "status": "pending" },
+        { "id": "e-12", "name": "admin product creation", "status": "pending" },
+        { "id": "e-13", "name": "admin inventory update", "status": "pending" },
+        { "id": "e-14", "name": "admin order status update", "status": "pending" },
+        { "id": "e-15", "name": "admin refund flow", "status": "pending" },
+        { "id": "e-16", "name": "unauthorised admin access is rejected", "status": "pending" },
+        { "id": "e-17", "name": "category browse, filter and sort", "status": "pending" },
+        { "id": "e-18", "name": "mobile navigation and filter drawer", "status": "pending" },
+        { "id": "e-19", "name": "keyboard-only navigation of the mega menu and cart drawer", "status": "pending" },
+        { "id": "e-20", "name": "coupon applies and is reflected in the order total", "status": "pending" }
+      ]
+    }
+  }
+}
