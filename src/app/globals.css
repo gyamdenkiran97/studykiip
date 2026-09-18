@@ -222,3 +222,28 @@
   40% { transform: scale(1.28); }
   100% { transform: scale(1); }
 }
+
+/* ---------------------------------------------------------------------------
+   Print: invoices and packing lists should come out clean, without site chrome.
+   --------------------------------------------------------------------------- */
+@media print {
+  header[class*="sticky"],
+  nav[aria-label="Admin"],
+  nav[aria-label="Quick actions"],
+  aside,
+  footer[class*="mt-24"] {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff;
+  }
+
+  a[href]::after {
+    content: "";
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+}
