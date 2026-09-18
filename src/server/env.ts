@@ -40,6 +40,16 @@ const schema = z.object({
 
   SENTRY_DSN: z.string().optional(),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
+
+  /**
+   * Raises the authentication rate limits so an end-to-end suite can sign in
+   * repeatedly. Refused in production below — the limits exist precisely to
+   * make credential stuffing expensive.
+   */
+  E2E_RELAX_AUTH_RATE_LIMIT: z
+    .enum(["true", "false"])
+    .default("false")
+    .transform((value) => value === "true"),
 });
 
 function load() {
@@ -57,6 +67,9 @@ function load() {
     }
     if (env.PAYMENT_PROVIDER === "mock") {
       throw new Error("PAYMENT_PROVIDER=mock is not permitted in production");
+    }
+    if (env.E2E_RELAX_AUTH_RATE_LIMIT) {
+      throw new Error("E2E_RELAX_AUTH_RATE_LIMIT cannot be enabled in production");
     }
   }
   return env;

@@ -18,6 +18,12 @@ export default defineConfig({
     hookTimeout: 30_000,
   },
   resolve: {
-    alias: { "@": path.resolve(import.meta.dirname, "src") },
+    alias: {
+      "@": path.resolve(import.meta.dirname, "src"),
+      // `server-only` throws outside a React Server Component bundle. Tests
+      // exercise those modules directly, so it is stubbed rather than removed
+      // from the source — the guard still applies to real client bundles.
+      "server-only": path.resolve(import.meta.dirname, "tests/stubs/server-only.ts"),
+    },
   },
 });

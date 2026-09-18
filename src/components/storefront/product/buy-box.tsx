@@ -138,8 +138,11 @@ export function BuyBox({
   }, [activeVariant, images]);
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:gap-14">
-      <div className="lg:sticky lg:top-24 lg:self-start">
+    // min-w-0 on the grid and the gallery column: an auto-sized grid track
+    // takes its max-content width, which lets the horizontally scrolling mobile
+    // gallery stretch the whole page sideways.
+    <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:gap-14">
+      <div className="min-w-0 lg:sticky lg:top-24 lg:self-start">
         <ProductGallery images={galleryImages} activeVariantId={activeVariant?.id ?? null} title={productTitle} />
       </div>
 

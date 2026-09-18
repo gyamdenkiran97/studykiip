@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState, useTransition } from "react";
+import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import * as Accordion from "@radix-ui/react-accordion";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -178,18 +178,33 @@ export function ActiveFilterChips({ facets }: { facets: CatalogFacets }) {
 
 function FilterSections({ facets }: { facets: CatalogFacets }) {
   const { apply, searchParams } = useFilterNavigation();
-  const state = useMemo(() => readState(new URLSearchParams(searchParams.toString())), [searchParams]);
-  const [minInput, setMinInput] = useState(state.min?.toString() ?? "");
-  const [maxInput, setMaxInput] = useState(state.max?.toString() ?? "");
+  const urlState = useMemo(() => readState(new URLSearchParams(searchParams.toString())), [searchParams]);
 
-  const toggleMulti = (paramKey: string, current: string[], value: string) =>
+  // The URL is the source of truth, but navigation is asynchronous. Mirroring
+  // it in local state lets a checkbox respond to the click immediately instead
+  // of appearing stuck until the new page arrives.
+  const [state, setState] = useState(urlState);
+  useEffect(() => setState(urlState), [urlState]);
+
+  const [minInput, setMinInput] = useState(urlState.min?.toString() ?? "");
+  const [maxInput, setMaxInput] = useState(urlState.max?.toString() ?? "");
+
+  const toggleMulti = (paramKey: string, current: string[], value: string) => {
+    const next = current.includes(value)
+      ? current.filter((entry) => entry !== value)
+      : [...current, value];
+
+    setState((draft) =>
+      paramKey === "brand"
+        ? { ...draft, brand: next }
+        : { ...draft, attributes: { ...draft.attributes, [paramKey.replace("attr_", "")]: next } },
+    );
+
     apply((params) => {
-      const next = current.includes(value)
-        ? current.filter((entry) => entry !== value)
-        : [...current, value];
       if (next.length) params.set(paramKey, next.join(","));
       else params.delete(paramKey);
     });
+  };
 
   const sections = [
     facets.availability.inStock > 0 || facets.availability.onSale > 0 ? (
@@ -198,13 +213,21 @@ function FilterSections({ facets }: { facets: CatalogFacets }) {
           label="In stock only"
           count={facets.availability.inStock}
           checked={state.stock}
-          onChange={() => apply((params) => (state.stock ? params.delete("stock") : params.set("stock", "1")))}
+          onChange={() => {
+            const next = !state.stock;
+            setState((draft) => ({ ...draft, stock: next }));
+            apply((params) => (next ? params.set("stock", "1") : params.delete("stock")));
+          }}
         />
         <CheckRow
           label="On sale"
           count={facets.availability.onSale}
           checked={state.sale}
-          onChange={() => apply((params) => (state.sale ? params.delete("sale") : params.set("sale", "1")))}
+          onChange={() => {
+            const next = !state.sale;
+            setState((draft) => ({ ...draft, sale: next }));
+            apply((params) => (next ? params.set("sale", "1") : params.delete("sale")));
+          }}
         />
       </Section>
     ) : null,
@@ -274,11 +297,13 @@ function FilterSections({ facets }: { facets: CatalogFacets }) {
           key={rating}
           label={`${rating}★ and up`}
           checked={state.rating === rating}
-          onChange={() =>
+          onChange={() => {
+            const next = state.rating === rating ? undefined : rating;
+            setState((draft) => ({ ...draft, rating: next }));
             apply((params) =>
-              state.rating === rating ? params.delete("rating") : params.set("rating", String(rating)),
-            )
-          }
+              next === undefined ? params.delete("rating") : params.set("rating", String(next)),
+            );
+          }}
         />
       ))}
     </Section>,

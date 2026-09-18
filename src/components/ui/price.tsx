@@ -26,7 +26,11 @@ export function Price({
   } as const;
 
   return (
-    <span className={cn("tabular inline-flex items-baseline gap-2", sizes[size], className)}>
+    <span
+      data-testid="price"
+      data-price-cents={cents}
+      className={cn("tabular inline-flex items-baseline gap-2", sizes[size], className)}
+    >
       <span className={cn("font-medium", onSale && "text-clay")}>{formatMoney(cents, currency)}</span>
       {onSale ? (
         <>

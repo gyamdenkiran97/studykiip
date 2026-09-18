@@ -80,17 +80,20 @@ export const auth = betterAuth({
   },
 
   // Better Auth's own limiter guards the auth endpoints; application-level
-  // limits live in src/server/rate-limit.
-  rateLimit: {
-    enabled: true,
-    window: 60,
-    max: 30,
-    customRules: {
-      "/sign-in/email": { window: 600, max: 8 },
-      "/sign-up/email": { window: 3600, max: 5 },
-      "/forget-password": { window: 3600, max: 5 },
-    },
-  },
+  // limits live in src/server/rate-limit. The relaxed variant exists so an
+  // end-to-end suite can sign in repeatedly; env.ts refuses it in production.
+  rateLimit: env.E2E_RELAX_AUTH_RATE_LIMIT
+    ? { enabled: true, window: 60, max: 1000 }
+    : {
+        enabled: true,
+        window: 60,
+        max: 30,
+        customRules: {
+          "/sign-in/email": { window: 600, max: 8 },
+          "/sign-up/email": { window: 3600, max: 5 },
+          "/forget-password": { window: 3600, max: 5 },
+        },
+      },
 
   advanced: {
     cookiePrefix: "kiip",

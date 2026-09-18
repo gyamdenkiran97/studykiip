@@ -33,10 +33,14 @@ export interface SearchEngine {
 const CONTROL_CHARACTERS = /[\p{Cc}]/gu;
 const PATTERN_WILDCARDS = /[%_\\]/g;
 
-/** Strip characters that would confuse ILIKE/trigram matching or bloat the query. */
+/**
+ * Strip characters that would confuse ILIKE/trigram matching or bloat the
+ * query. Control characters become spaces rather than being deleted, so a
+ * pasted multi-line string searches for its words instead of one run-on token.
+ */
 export function normaliseQuery(raw: string): string {
   return raw
-    .replace(CONTROL_CHARACTERS, "")
+    .replace(CONTROL_CHARACTERS, " ")
     .replace(PATTERN_WILDCARDS, " ")
     .replace(/\s+/g, " ")
     .trim()

@@ -48,7 +48,7 @@ export function ProductGallery({
   const active = images[Math.min(index, images.length - 1)];
 
   return (
-    <div className="lg:flex lg:gap-4">
+    <div className="min-w-0 lg:flex lg:gap-4">
       {images.length > 1 ? (
         <div className="hidden lg:block">
           <ul className="flex flex-col gap-2.5">
@@ -72,7 +72,7 @@ export function ProductGallery({
         </div>
       ) : null}
 
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 overflow-hidden">
         {/* Desktop frame with zoom */}
         <div
           className="relative hidden aspect-5/6 w-full overflow-hidden bg-paper-deep lg:block"

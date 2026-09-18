@@ -303,8 +303,8 @@ function AnnouncementBar({ announcements }: { announcements: Announcement[] }) {
 
   return (
     <div className="bg-ink text-paper">
-      <div className="shell flex h-9 items-center justify-center gap-2 text-center text-[12px] tracking-[0.02em]">
-        <p key={current.id} className="animate-[fade-in_500ms_ease-out] truncate motion-reduce:animate-none">
+      <div className="shell flex h-9 min-w-0 items-center justify-center gap-2 overflow-hidden text-center text-[12px] tracking-[0.02em]">
+        <p key={current.id} className="min-w-0 animate-[fade-in_500ms_ease-out] truncate motion-reduce:animate-none">
           {current.headline}
           {current.subtext ? <span className="ml-2 text-paper/60">{current.subtext}</span> : null}
           {current.ctaLabel && current.ctaHref ? (

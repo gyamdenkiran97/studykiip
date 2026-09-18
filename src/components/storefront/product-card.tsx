@@ -70,7 +70,10 @@ export function ProductCard({
   return (
     <article className={cn("group/card relative flex flex-col", className)}>
       <div className="relative overflow-hidden bg-paper-deep">
-        <Link href={`/product/${product.slug}`} className="block" tabIndex={-1} aria-hidden="true">
+        {/* Not a link: the title below stretches over the whole card, so a
+            second anchor here would be a duplicate for assistive tech and an
+            unreachable target for anything driving the page. */}
+        <div className="block">
           <div className="relative aspect-5/6">
             <ProductImage
               src={product.primaryImage?.url}
@@ -88,7 +91,7 @@ export function ProductCard({
               />
             ) : null}
           </div>
-        </Link>
+        </div>
 
         <div className="pointer-events-none absolute top-3 left-3 flex flex-col items-start gap-1.5">
           {onSale ? <Badge tone="sale">−{percent}%</Badge> : null}
@@ -144,10 +147,12 @@ export function ProductCard({
         {product.ratingCount > 0 ? (
           <Rating value={product.ratingAverage} count={product.ratingCount} className="mt-1.5" />
         ) : null}
-        <div className="mt-auto flex items-baseline gap-2 pt-2.5">
+        {/* Wraps rather than overflowing: a reduced price plus an option count
+            does not fit on one line in a narrow two-column mobile grid. */}
+        <div className="mt-auto flex flex-wrap items-baseline gap-x-2 gap-y-1 pt-2.5">
           <Price cents={product.priceCents} compareAtCents={product.compareAtCents} currency={product.currency} />
           {product.variantCount > 1 ? (
-            <span className="text-[11px] text-muted">{product.variantCount} options</span>
+            <span className="text-[11px] whitespace-nowrap text-muted">{product.variantCount} options</span>
           ) : null}
         </div>
       </div>
