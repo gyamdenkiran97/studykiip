@@ -1,10 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700" width="900" height="700" role="img">
   <defs>
-    <linearGradient id="eg" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="eg" x1="0" y1="0" x2="0.4" y2="1">
       <stop offset="0" stop-color="#E6E8E9"/>
       <stop offset="1" stop-color="#D4D8DA"/>
     </linearGradient>
-    <filter id="soft"><feGaussianBlur stdDeviation="76"/></filter>
     <filter id="grain2">
       <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" seed="15"/>
       <feColorMatrix type="saturate" values="0"/>
@@ -12,7 +11,11 @@
     </filter>
   </defs>
   <rect width="900" height="700" fill="url(#eg)"/>
-  <g filter="url(#soft)"><circle cx="201" cy="148" r="471" fill="#4A5257" opacity="0.18"/><circle cx="893" cy="576" r="313" fill="#333A3E" opacity="0.14"/><circle cx="248" cy="383" r="596" fill="#20262A" opacity="0.13"/><circle cx="4" cy="315" r="315" fill="#D4D8DA" opacity="0.17"/></g>
-  <path d="M0 393 Q 315 253 900 453 L 900 700 L 0 700 Z" fill="#333A3E" opacity="0.14"/>
-  <rect width="900" height="700" filter="url(#grain2)" opacity="0.65"/>
+  
+      <circle cx="317" cy="331" r="140" fill="#20262A" opacity="0.6"/>
+      <rect x="0" y="432" width="900" height="268" fill="#4A5257" opacity="0.55"/>
+      <rect x="0" y="545" width="900" height="155" fill="#333A3E" opacity="0.4"/>
+      <line x1="0" y1="432" x2="900" y2="432" stroke="#20262A" stroke-width="2" opacity="0.4"/>
+      <line x1="558" y1="452" x2="558" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="571" y1="452" x2="571" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="584" y1="452" x2="584" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="597" y1="452" x2="597" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="610" y1="452" x2="610" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="623" y1="452" x2="623" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="636" y1="452" x2="636" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="649" y1="452" x2="649" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="662" y1="452" x2="662" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="675" y1="452" x2="675" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="688" y1="452" x2="688" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="701" y1="452" x2="701" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="714" y1="452" x2="714" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="727" y1="452" x2="727" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="740" y1="452" x2="740" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="753" y1="452" x2="753" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="766" y1="452" x2="766" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="779" y1="452" x2="779" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="792" y1="452" x2="792" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="805" y1="452" x2="805" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/><line x1="818" y1="452" x2="818" y2="543" stroke="#E6E8E9" stroke-width="1.5" opacity="0.32"/>
+  <rect width="900" height="700" filter="url(#grain2)" opacity="0.7"/>
 </svg>

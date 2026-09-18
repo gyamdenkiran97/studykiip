@@ -293,7 +293,14 @@ export function productImageSvg(options: {
 </svg>`;
 }
 
-/** Wide editorial artwork for category and campaign blocks. */
+/**
+ * Wide editorial artwork for category, campaign and hero blocks.
+ *
+ * Four deterministic compositions in the Swiss-poster tradition — an arc, a
+ * horizon, a column grid and a stack — chosen by hashing the seed. Shapes have
+ * defined edges rather than soft blobs, so the artwork reads as designed rather
+ * than as a gradient wash.
+ */
 export function editorialImageSvg(options: {
   seed: string;
   palette: keyof typeof PALETTES;
@@ -303,32 +310,85 @@ export function editorialImageSvg(options: {
   const { seed, palette, width = 1440, height = 900 } = options;
   const p = PALETTES[palette] ?? PALETTES.oat;
   const random = rng(hash(seed));
-  const arcs = Array.from({ length: 4 }, (_, i) => {
-    const r = 180 + random() * 420;
-    const cx = random() * width;
-    const cy = height * (0.2 + random() * 0.7);
-    const fill = [p.body, p.bodyShade, p.accent, p.groundEdge][i % 4];
-    return `<circle cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" r="${r.toFixed(0)}" fill="${fill}" opacity="${(0.1 + random() * 0.16).toFixed(2)}"/>`;
-  }).join("");
+  const composition = hash(`${seed}:composition`) % 4;
 
-  const bandY = height * (0.55 + random() * 0.2);
+  const w = width;
+  const h = height;
+  const body = p.body;
+  const shade = p.bodyShade;
+  const accent = p.accent;
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img">
+  /** Evenly spaced hairlines; the texture that keeps flat colour from feeling empty. */
+  const hatch = (x: number, y: number, hatchWidth: number, hatchHeight: number, gap: number, colour: string) => {
+    const lines: string[] = [];
+    for (let offset = 0; offset < hatchWidth; offset += gap) {
+      lines.push(
+        `<line x1="${(x + offset).toFixed(0)}" y1="${y.toFixed(0)}" x2="${(x + offset).toFixed(0)}" y2="${(y + hatchHeight).toFixed(0)}" stroke="${colour}" stroke-width="1.5" opacity="0.32"/>`,
+      );
+    }
+    return lines.join("");
+  };
+
+  let art = "";
+
+  if (composition === 0) {
+    // Arc: a large quarter-circle anchored off one corner.
+    const radius = h * (0.82 + random() * 0.3);
+    const cx = w * (random() > 0.5 ? 0.72 : 0.28);
+    art = `
+      <rect x="0" y="${(h * 0.62).toFixed(0)}" width="${w}" height="${(h * 0.38).toFixed(0)}" fill="${shade}" opacity="0.18"/>
+      <circle cx="${cx.toFixed(0)}" cy="${(h * 0.92).toFixed(0)}" r="${radius.toFixed(0)}" fill="${body}" opacity="0.5"/>
+      <circle cx="${cx.toFixed(0)}" cy="${(h * 0.92).toFixed(0)}" r="${(radius * 0.58).toFixed(0)}" fill="${shade}" opacity="0.45"/>
+      <circle cx="${cx.toFixed(0)}" cy="${(h * 0.92).toFixed(0)}" r="${(radius * 0.22).toFixed(0)}" fill="${accent}" opacity="0.55"/>
+      ${hatch(w * 0.06, h * 0.12, w * 0.2, h * 0.3, 11, accent)}`;
+  } else if (composition === 1) {
+    // Horizon: banded ground with a disc sitting on the line.
+    const horizon = h * (0.52 + random() * 0.14);
+    const discX = w * (0.24 + random() * 0.5);
+    const discR = h * 0.2;
+    art = `
+      <circle cx="${discX.toFixed(0)}" cy="${(horizon - discR * 0.72).toFixed(0)}" r="${discR.toFixed(0)}" fill="${accent}" opacity="0.6"/>
+      <rect x="0" y="${horizon.toFixed(0)}" width="${w}" height="${(h - horizon).toFixed(0)}" fill="${body}" opacity="0.55"/>
+      <rect x="0" y="${(horizon + (h - horizon) * 0.42).toFixed(0)}" width="${w}" height="${((h - horizon) * 0.58).toFixed(0)}" fill="${shade}" opacity="0.4"/>
+      <line x1="0" y1="${horizon.toFixed(0)}" x2="${w}" y2="${horizon.toFixed(0)}" stroke="${accent}" stroke-width="2" opacity="0.4"/>
+      ${hatch(w * 0.62, horizon + 20, w * 0.3, (h - horizon) * 0.34, 13, p.ground)}`;
+  } else if (composition === 2) {
+    // Columns: an uneven rhythm of vertical panels.
+    const columns = 5 + (hash(seed) % 3);
+    const columnWidth = w / columns;
+    const bars = Array.from({ length: columns }, (_, index) => {
+      const heightRatio = 0.28 + random() * 0.6;
+      const top = h - h * heightRatio;
+      const fill = [body, shade, accent][index % 3];
+      return `<rect x="${(index * columnWidth).toFixed(0)}" y="${top.toFixed(0)}" width="${(columnWidth - 2).toFixed(0)}" height="${(h * heightRatio).toFixed(0)}" fill="${fill}" opacity="${(0.28 + (index % 3) * 0.14).toFixed(2)}"/>`;
+    }).join("");
+    art = `${bars}
+      <circle cx="${(w * 0.5).toFixed(0)}" cy="${(h * 0.3).toFixed(0)}" r="${(h * 0.16).toFixed(0)}" fill="none" stroke="${accent}" stroke-width="2.5" opacity="0.45"/>`;
+  } else {
+    // Stack: overlapping rounded panels, offset like sheets of paper.
+    const panels = Array.from({ length: 3 }, (_, index) => {
+      const inset = 0.08 + index * 0.09;
+      const fill = [body, shade, accent][index];
+      return `<rect x="${(w * inset).toFixed(0)}" y="${(h * (inset + 0.04)).toFixed(0)}" width="${(w * (1 - inset * 2)).toFixed(0)}" height="${(h * (1 - inset * 1.7)).toFixed(0)}" rx="${(h * 0.02).toFixed(0)}" fill="${fill}" opacity="${(0.24 + index * 0.1).toFixed(2)}"/>`;
+    }).join("");
+    art = `${panels}
+      ${hatch(w * 0.34, h * 0.36, w * 0.32, h * 0.26, 12, p.ground)}`;
+  }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img">
   <defs>
-    <linearGradient id="eg" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="eg" x1="0" y1="0" x2="0.4" y2="1">
       <stop offset="0" stop-color="${p.ground}"/>
       <stop offset="1" stop-color="${p.groundEdge}"/>
     </linearGradient>
-    <filter id="soft"><feGaussianBlur stdDeviation="${(40 + random() * 40).toFixed(0)}"/></filter>
     <filter id="grain2">
       <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" seed="${hash(seed) % 90}"/>
       <feColorMatrix type="saturate" values="0"/>
       <feComponentTransfer><feFuncA type="linear" slope="0.05"/></feComponentTransfer>
     </filter>
   </defs>
-  <rect width="${width}" height="${height}" fill="url(#eg)"/>
-  <g filter="url(#soft)">${arcs}</g>
-  <path d="M0 ${bandY.toFixed(0)} Q ${(width * 0.35).toFixed(0)} ${(bandY - 140).toFixed(0)} ${width} ${(bandY + 60).toFixed(0)} L ${width} ${height} L 0 ${height} Z" fill="${p.bodyShade}" opacity="0.14"/>
-  <rect width="${width}" height="${height}" filter="url(#grain2)" opacity="0.65"/>
+  <rect width="${w}" height="${h}" fill="url(#eg)"/>
+  ${art}
+  <rect width="${w}" height="${h}" filter="url(#grain2)" opacity="0.7"/>
 </svg>`;
 }

@@ -1,10 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700" width="900" height="700" role="img">
   <defs>
-    <linearGradient id="eg" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="eg" x1="0" y1="0" x2="0.4" y2="1">
       <stop offset="0" stop-color="#F3E7E6"/>
       <stop offset="1" stop-color="#E8D3D2"/>
     </linearGradient>
-    <filter id="soft"><feGaussianBlur stdDeviation="73"/></filter>
     <filter id="grain2">
       <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" seed="82"/>
       <feColorMatrix type="saturate" values="0"/>
@@ -12,7 +11,11 @@
     </filter>
   </defs>
   <rect width="900" height="700" fill="url(#eg)"/>
-  <g filter="url(#soft)"><circle cx="290" cy="221" r="481" fill="#D3A199" opacity="0.19"/><circle cx="181" cy="285" r="560" fill="#B67F76" opacity="0.15"/><circle cx="166" cy="162" r="559" fill="#7E4C45" opacity="0.20"/><circle cx="852" cy="401" r="513" fill="#E8D3D2" opacity="0.14"/></g>
-  <path d="M0 417 Q 315 277 900 477 L 900 700 L 0 700 Z" fill="#B67F76" opacity="0.14"/>
-  <rect width="900" height="700" filter="url(#grain2)" opacity="0.65"/>
+  
+      <rect x="0" y="434" width="900" height="266" fill="#B67F76" opacity="0.18"/>
+      <circle cx="252" cy="644" r="724" fill="#D3A199" opacity="0.5"/>
+      <circle cx="252" cy="644" r="420" fill="#B67F76" opacity="0.45"/>
+      <circle cx="252" cy="644" r="159" fill="#7E4C45" opacity="0.55"/>
+      <line x1="54" y1="84" x2="54" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="65" y1="84" x2="65" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="76" y1="84" x2="76" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="87" y1="84" x2="87" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="98" y1="84" x2="98" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="109" y1="84" x2="109" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="120" y1="84" x2="120" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="131" y1="84" x2="131" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="142" y1="84" x2="142" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="153" y1="84" x2="153" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="164" y1="84" x2="164" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="175" y1="84" x2="175" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="186" y1="84" x2="186" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="197" y1="84" x2="197" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="208" y1="84" x2="208" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="219" y1="84" x2="219" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/><line x1="230" y1="84" x2="230" y2="294" stroke="#7E4C45" stroke-width="1.5" opacity="0.32"/>
+  <rect width="900" height="700" filter="url(#grain2)" opacity="0.7"/>
 </svg>
