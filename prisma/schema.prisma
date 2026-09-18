@@ -3,12 +3,14 @@
 // Never floating point.
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
+  provider   = "postgresql"
+  extensions = [pg_trgm]
 }
 
 // ---------------------------------------------------------------------------
@@ -198,6 +200,7 @@ model Category {
 
   @@index([parentId])
   @@index([isActive])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, name: "categories_name_trgm_idx")
   @@map("categories")
 }
 
@@ -218,6 +221,7 @@ model Brand {
 
   products Product[]
 
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, name: "brands_name_trgm_idx")
   @@map("brands")
 }
 
@@ -283,6 +287,8 @@ model Product {
   @@index([status, publishedAt])
   @@index([brandId])
   @@index([isFeatured])
+  @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, name: "products_title_trgm_idx")
+  @@index([tags], type: Gin, name: "products_tags_idx")
   @@map("products")
 }
 
@@ -384,6 +390,7 @@ model ProductVariant {
 
   @@index([productId])
   @@index([isActive])
+  @@index([sku(ops: raw("gin_trgm_ops"))], type: Gin, name: "variants_sku_trgm_idx")
   @@map("product_variants")
 }
 
