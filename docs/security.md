@@ -146,6 +146,27 @@ scrubbed metadata, IP address. Payment webhooks are persisted in full before
 they are acted on, which doubles as the replay guard. `/api/health` reports
 liveness and database reachability without disclosing versions.
 
+## Dependency advisories
+
+`npm audit` reports four high-severity advisories. All four resolve to the
+`prisma` **CLI**, which is a devDependency, and none of them reach the running
+application:
+
+| Advisory | Package | Why it does not apply |
+| --- | --- | --- |
+| Auth plugin downgrade leaking plaintext credentials | `mysql2` | Bundled by the Prisma CLI for MySQL support. This project is PostgreSQL only and never loads that driver. |
+| Unbounded zlib inflate (decompression bomb) | `mysql2` | As above. |
+| Stack exhaustion merging recursive object graphs | `deepmerge-ts` | Reached through `@prisma/config` when the CLI reads `prisma.config.ts` — a short file in this repository, not attacker-controlled input. |
+
+**Do not run `npm audit fix --force`.** It resolves these by downgrading to
+`prisma@6.19.3`, which cannot read this schema: Prisma 7 moved the datasource
+URL into `prisma.config.ts` and this project uses the driver-adapter client.
+The downgrade breaks the build to remediate code that never executes.
+
+Re-check on each Prisma release; the advisories close upstream when the CLI
+updates its own dependencies. What would change this assessment: adopting
+MySQL, or generating `prisma.config.ts` from untrusted input.
+
 ## Known gaps
 
 Stated plainly, because a security document that claims completeness is not
