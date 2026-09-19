@@ -1,4 +1,4 @@
-# Kiip Mall — build progress
+# Kwidus21 — build progress
 
 > Working log for this repository. Read this first when resuming with fresh context,
 > then `tests.json`, then `git log --oneline`, then run `npm run test`.
@@ -25,7 +25,7 @@ npm run dev                   # http://localhost:3000
 Tests:
 
 ```bash
-npm run test                  # 126 unit + integration tests (needs kiipmall_test)
+npm run test                  # 129 unit + integration tests (needs a test database)
 npm run test:e2e              # 67 end-to-end tests (starts a dev server if needed)
 ```
 
@@ -65,7 +65,7 @@ npm run test:e2e              # 67 end-to-end tests (starts a dev server if need
 
 Everything below was run on 2026-09-18 against this commit.
 
-**Tests.** 126 Vitest tests across 16 files (unit + integration, the integration
+**Tests.** 129 Vitest tests across 16 files (unit + integration, the integration
 suite against a real PostgreSQL database), and 67 Playwright tests across 8 spec
 files. All passing, none skipped. Test counts and per-requirement mapping are in
 `tests.json`.
@@ -224,6 +224,52 @@ detail and an invoice.
 - The remaining warnings were unused imports and parameters, all removed.
 - `npm run lint`, `npm run typecheck`, `npm run build`, 126 Vitest tests and 67
   Playwright tests were all re-run after these changes and all pass.
+
+### 2026-09-19 — rename to Kwidus21, and two bugs it surfaced
+
+The store was renamed from its working title. 40 files: display name, package
+name, cookie and storage-key prefixes, the mock provider's signature header,
+placeholder email domains, seeded social handles, and the docs. The header
+wordmark lost its "Mall" descriptor, which is no longer part of the name. The
+local PostgreSQL database keeps its original name — that is environment
+configuration, not branding, and `.env.example` ships generic placeholders.
+The demo data was re-seeded so the demo accounts use the new domain.
+
+Re-running the suite afterwards turned up **two genuine bugs**, both in refunds,
+and both found because a test refused to skip:
+
+- **A second partial refund corrupted the accounting.** `refundOrder` committed
+  the provider call, the refund row and the incremented totals, and only then
+  asked the state machine to move the order to `PARTIALLY_REFUNDED` — which it
+  already was. The machine has no self-transitions, rightly, so it threw; the
+  catch block marked the refund `FAILED` while the money had already moved and
+  the totals had already been incremented. The status is now resolved and
+  proved legal *before* anything leaves the provider, and a status that does not
+  change is simply not asked for. Covered by three new integration tests,
+  including one asserting a refused refund leaves the totals untouched.
+- **The admin UI offered a refund on an order that had never been paid.**
+  Refundable was computed as `totalCents - refundedCents`, so an order whose
+  payment was declined showed a full refundable balance. The server always
+  refused it, so nothing could go wrong with the money — but it is a broken
+  affordance. Refundable now requires a captured payment.
+
+Test-quality work in the same pass:
+
+- The admin tests needed a paid order, which only the customer purchase flow
+  creates. They were finding one by scanning, so they passed, skipped or failed
+  depending on what had run before them and what previous runs had consumed.
+  They now build their own through `tests/e2e/fixtures/paid-order.ts`, which
+  writes the same rows a real checkout writes. Raw SQL via `pg`, because
+  Playwright compiles to CommonJS and the generated Prisma client is ESM-only.
+- `playwright.config.ts` now loads `.env`; Next loads it for the app, but the
+  test runner is a separate process and the fixture needs `DATABASE_URL`.
+- The refund assertions poll with a reload rather than asserting after a single
+  one. The success toast appears the moment the action returns, and a reload in
+  that same instant can render before the refreshed data arrives — which says
+  nothing about whether the refund worked. The database was checked directly to
+  confirm the application was right and the test was wrong.
+- **Nothing in the suite skips any more.** 129 Vitest and 67 Playwright tests,
+  all executed.
 
 ### M13 — deployment preparation
 - `docs/deployment.md` written: build and run, every variable, the webhook endpoint

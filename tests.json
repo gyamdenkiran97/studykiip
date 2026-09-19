@@ -1,9 +1,9 @@
 {
   "$comment": "Required functionality and its verification status. Never delete a test to make the suite pass — fix the implementation. 'coveredBy' names the file that actually proves each item, so this file can be audited against the suite rather than taken on trust.",
-  "updatedAt": "2026-09-18",
+  "updatedAt": "2026-09-19",
   "summary": {
-    "requirements": 78,
-    "passing": 78,
+    "requirements": 83,
+    "passing": 83,
     "failing": 0,
     "pending": 0
   },
@@ -11,10 +11,10 @@
     "vitest": {
       "command": "npm run test",
       "files": 16,
-      "tests": 126,
-      "passing": 126,
+      "tests": 129,
+      "passing": 129,
       "failing": 0,
-      "requires": "PostgreSQL database `kiipmall_test` (TEST_DATABASE_URL, or DATABASE_URL with the database name swapped)"
+      "requires": "PostgreSQL database `kiipmall_test` (TEST_DATABASE_URL, or DATABASE_URL with the database name swapped). The local database keeps its original name; it is configuration, not branding."
     },
     "playwright": {
       "command": "npm run test:e2e",
@@ -337,6 +337,24 @@
           "name": "slug generation is stable, ASCII and collision-safe per namespace",
           "status": "passing",
           "coveredBy": "tests/integration/slug.test.ts"
+        },
+        {
+          "id": "i-refund-03",
+          "name": "a second partial refund on an already partially refunded order succeeds",
+          "status": "passing",
+          "coveredBy": "tests/integration/payments.test.ts"
+        },
+        {
+          "id": "i-refund-04",
+          "name": "a later partial refund that settles the balance closes the order and returns stock",
+          "status": "passing",
+          "coveredBy": "tests/integration/payments.test.ts"
+        },
+        {
+          "id": "i-refund-05",
+          "name": "a refused refund leaves the totals and status untouched",
+          "status": "passing",
+          "coveredBy": "tests/integration/payments.test.ts"
         }
       ]
     },
@@ -431,7 +449,7 @@
         },
         {
           "id": "e-15",
-          "name": "admin refund flow, including refusing an over-refund",
+          "name": "admin refund flow: partial refund, over-refund refused, second partial refund",
           "status": "passing",
           "coveredBy": "tests/e2e/admin.spec.ts"
         },
@@ -512,6 +530,18 @@
           "name": "prefers-reduced-motion is honoured; content renders in its final state",
           "status": "passing",
           "coveredBy": "tests/e2e/accessibility.spec.ts"
+        },
+        {
+          "id": "e-29",
+          "name": "an order whose payment was declined offers no refund control",
+          "status": "passing",
+          "coveredBy": "tests/e2e/admin.spec.ts"
+        },
+        {
+          "id": "e-30",
+          "name": "an archived product disappears from the storefront but stays in the back office",
+          "status": "passing",
+          "coveredBy": "tests/e2e/admin.spec.ts"
         }
       ]
     }
