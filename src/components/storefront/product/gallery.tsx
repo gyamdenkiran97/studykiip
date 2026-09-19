@@ -125,18 +125,25 @@ export function ProductGallery({
         </div>
 
         {images.length > 1 ? (
-          <div className="mt-3 flex justify-center gap-1.5 lg:hidden">
+          <div className="mt-1 flex justify-center lg:hidden">
             {images.map((image, imageIndex) => (
               <button
                 key={image.url}
                 type="button"
                 onClick={() => setIndex(imageIndex)}
-                aria-label={`Go to image ${imageIndex + 1}`}
-                className={cn(
-                  "h-1.5 w-1.5 rounded-full transition-colors",
-                  imageIndex === index ? "bg-ink" : "bg-line-strong",
-                )}
-              />
+                aria-label={`Go to image ${imageIndex + 1} of ${images.length}`}
+                aria-current={imageIndex === index ? "true" : undefined}
+                // The dot stays 6px; the button around it is 24x24 so the
+                // target meets WCAG 2.2 AA 2.5.8 without the design changing.
+                className="grid h-6 w-6 place-items-center"
+              >
+                <span
+                  className={cn(
+                    "h-1.5 w-1.5 rounded-full transition-colors",
+                    imageIndex === index ? "bg-ink" : "bg-line-strong",
+                  )}
+                />
+              </button>
             ))}
           </div>
         ) : null}

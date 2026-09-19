@@ -1,3 +1,5 @@
+import { ZodError } from "zod";
+
 /**
  * Application error taxonomy. Every thrown AppError carries a stable code that
  * the UI can translate; `message` is safe to show to an end user.
@@ -75,9 +77,39 @@ export function toActionError(error: unknown): ActionResult<never> {
   if (isAppError(error)) {
     return { ok: false, code: error.code, message: error.message, details: error.details };
   }
+
+  /**
+   * A schema rejection is the customer's input being wrong, not the server
+   * being broken, and it must not be reported as "something went wrong" — that
+   * tells someone with a mistyped postcode to retry an action that will fail
+   * identically every time.
+   *
+   * The issues are flattened to one message per field so a form can put each
+   * one beside the input it belongs to. Only the first issue per field is kept:
+   * three complaints about the same box is noise, not help.
+   */
+  if (error instanceof ZodError) {
+    const fieldErrors: Record<string, string> = {};
+    for (const issue of error.issues) {
+      const field = issue.path.join(".");
+      if (field && !(field in fieldErrors)) fieldErrors[field] = issue.message;
+    }
+    const count = Object.keys(fieldErrors).length;
+    return {
+      ok: false,
+      code: "VALIDATION",
+      message:
+        count === 1
+          ? "Please correct the highlighted field."
+          : "Please correct the highlighted fields.",
+      details: { fieldErrors },
+    };
+  }
+
   return {
     ok: false,
     code: "INTERNAL",
     message: "Something went wrong. Please try again.",
   };
 }
+

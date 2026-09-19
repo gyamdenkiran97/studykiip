@@ -2,8 +2,8 @@
   "$comment": "Required functionality and its verification status. Never delete a test to make the suite pass — fix the implementation. 'coveredBy' names the file that actually proves each item, so this file can be audited against the suite rather than taken on trust.",
   "updatedAt": "2026-09-19",
   "summary": {
-    "requirements": 83,
-    "passing": 83,
+    "requirements": 88,
+    "passing": 88,
     "failing": 0,
     "pending": 0
   },
@@ -11,15 +11,15 @@
     "vitest": {
       "command": "npm run test",
       "files": 16,
-      "tests": 129,
-      "passing": 129,
+      "tests": 136,
+      "passing": 136,
       "failing": 0,
       "requires": "PostgreSQL database `kiipmall_test` (TEST_DATABASE_URL, or DATABASE_URL with the database name swapped). The local database keeps its original name; it is configuration, not branding."
     },
     "playwright": {
       "command": "npm run test:e2e",
-      "tests": 67,
-      "passing": 67,
+      "tests": 78,
+      "passing": 78,
       "failing": 0,
       "conditionallySkipped": 0,
       "requires": "A running app (the config starts `npm run dev` if nothing is listening) against the seeded development database",
@@ -168,6 +168,24 @@
           "name": "the logger redacts secret-bearing keys at any depth",
           "status": "passing",
           "coveredBy": "tests/unit/logger.test.ts"
+        },
+        {
+          "id": "u-valid-03",
+          "name": "a schema rejection becomes a validation failure, not an internal error",
+          "status": "passing",
+          "coveredBy": "tests/unit/action-errors.test.ts"
+        },
+        {
+          "id": "u-valid-04",
+          "name": "every invalid field is named, first complaint only",
+          "status": "passing",
+          "coveredBy": "tests/unit/action-errors.test.ts"
+        },
+        {
+          "id": "u-valid-05",
+          "name": "an unexpected error stays behind a generic message and leaks nothing",
+          "status": "passing",
+          "coveredBy": "tests/unit/action-errors.test.ts"
         }
       ]
     },
@@ -542,6 +560,18 @@
           "name": "an archived product disappears from the storefront but stays in the back office",
           "status": "passing",
           "coveredBy": "tests/e2e/admin.spec.ts"
+        },
+        {
+          "id": "e-31",
+          "name": "icon-only controls meet WCAG 2.2 target size on desktop and phone",
+          "status": "passing",
+          "coveredBy": "tests/e2e/target-size.spec.ts"
+        },
+        {
+          "id": "e-32",
+          "name": "a keyboard-focused control is never hidden behind the sticky header",
+          "status": "passing",
+          "coveredBy": "tests/e2e/accessibility.spec.ts"
         }
       ]
     }

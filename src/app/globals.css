@@ -79,6 +79,32 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+
+    /* The header is sticky and 55px tall. Without this, scrolling to an anchor
+       or tabbing to a control near the top of the viewport puts it underneath
+       the header — WCAG 2.2 AA 2.4.11, Focus Not Obscured. Measured, not
+       guessed: 55px plus room to breathe. */
+    scroll-padding-top: 4.5rem;
+  }
+
+  /* Below the large breakpoint a bottom bar is fixed to the viewport, and it
+     obscures a focused control at the foot of the page for the same reason. */
+  @media (width < 64rem) {
+    html {
+      scroll-padding-bottom: 5.5rem;
+    }
+  }
+
+  /* Removes the ~300ms tap delay without disabling pinch-zoom, which
+     double-tap-to-zoom suppression via `touch-action: none` would. */
+  a,
+  button,
+  summary,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    touch-action: manipulation;
   }
 
   body {

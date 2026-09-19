@@ -198,6 +198,42 @@ Treated as part of the design rather than a pass afterwards:
 
 ---
 
+## 4a. External audit — ui-ux-pro-max
+
+The UI was reviewed against
+[`nextlevelbuilder/ui-ux-pro-max-skill`](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)
+(MIT), a searchable database of UI/UX guidance. Its own CRITICAL and HIGH web
+rules were used as the checklist; `--design-system` was deliberately **not**
+used, since generating a fresh visual direction would fight the identity in §2
+rather than check it.
+
+Most of the checklist was already satisfied — contrast, focus rings, skip link,
+alt text, `aria-label` on icon controls, reduced motion, no horizontal scroll,
+`autocomplete` on every credential field, filter chips that wrap rather than
+clip, `min-h-dvh` over `100vh`. Four gaps were real, and all four are fixed:
+
+| Rule | Finding | Fix |
+| --- | --- | --- |
+| `web-target-size` (WCAG 2.2 AA 2.5.8) | The mobile gallery position dots were `<button>`s of **6×6 CSS px** with 6px gaps. The spacing exception does not rescue them — 24px circles centred 12px apart overlap. | The dot stays 6px; the button around it is 24×24. The design is unchanged. |
+| `icon-context` | Those dots announced no state, so a screen reader user could not tell which image was showing. | `aria-current`, and the label now reads "Go to image 2 of 5". |
+| `focus-not-obscured` (WCAG 2.2 AA 2.4.11) | The 55px sticky header covered a control scrolled or tabbed to near the top of the viewport. | `scroll-padding-top: 4.5rem`, plus `scroll-padding-bottom` below the large breakpoint for the fixed bottom bar. Header height was measured, not guessed. |
+| `error-placement` / `focusable-error-summary` | A schema rejection surfaced as **"Something went wrong. Please try again."** with no indication of which field — a mistyped postcode told the customer to retry an action that would fail identically every time. | `toActionError` now recognises a `ZodError` and returns per-field messages. The checkout address form renders each beside its input with `aria-invalid` and `aria-describedby`, and a focusable summary links to each bad field. |
+
+Two rules were considered and consciously not acted on:
+
+- **Product title links are shorter than 24px.** A link sized by its own
+  line-height is what the standard's *inline* exception describes, and each
+  title sits beside a large image link to the same page — the *equivalent
+  control* exception. Enforcing 24px on every title would change the grid's
+  typography to satisfy a rule that does not apply.
+- **`--design-system` palette and font recommendations.** The identity is
+  deliberate and documented; swapping it for a generated one would discard §1's
+  originality work.
+
+Two of the fixes are now permanent tests — `tests/e2e/target-size.spec.ts` and a
+focus-not-obscured case in `tests/e2e/accessibility.spec.ts` — because axe
+reports neither, and a rule nothing checks is a rule that drifts.
+
 ## 5. Changing it
 
 Change the tokens in `src/app/globals.css`, not the components. A different

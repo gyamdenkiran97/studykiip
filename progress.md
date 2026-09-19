@@ -25,8 +25,8 @@ npm run dev                   # http://localhost:3000
 Tests:
 
 ```bash
-npm run test                  # 129 unit + integration tests (needs a test database)
-npm run test:e2e              # 67 end-to-end tests (starts a dev server if needed)
+npm run test                  # 136 unit + integration tests (needs a test database)
+npm run test:e2e              # 78 end-to-end tests (starts a dev server if needed)
 ```
 
 ## Documentation
@@ -65,8 +65,8 @@ npm run test:e2e              # 67 end-to-end tests (starts a dev server if need
 
 Everything below was run on 2026-09-18 against this commit.
 
-**Tests.** 129 Vitest tests across 16 files (unit + integration, the integration
-suite against a real PostgreSQL database), and 67 Playwright tests across 8 spec
+**Tests.** 136 Vitest tests across 17 files (unit + integration, the integration
+suite against a real PostgreSQL database), and 78 Playwright tests across 9 spec
 files. All passing, none skipped. Test counts and per-requirement mapping are in
 `tests.json`.
 
@@ -270,6 +270,38 @@ Test-quality work in the same pass:
   confirm the application was right and the test was wrong.
 - **Nothing in the suite skips any more.** 129 Vitest and 67 Playwright tests,
   all executed.
+
+### 2026-09-19 — external UI/UX audit
+
+Reviewed the interface against `nextlevelbuilder/ui-ux-pro-max-skill` (MIT),
+using its CRITICAL/HIGH web rules as a checklist. `--design-system` was not
+used: generating a fresh visual direction would have fought the identity rather
+than checked it.
+
+Most of the checklist already passed. Four real gaps, all fixed, detailed in
+`docs/design-system.md` §4a:
+
+- **WCAG 2.2 AA 2.5.8** — the mobile gallery dots were 6×6 px buttons. The dot
+  stays 6px and the button around it is now 24×24, so nothing looks different.
+- **Those dots announced no state** — added `aria-current` and "image 2 of 5".
+- **WCAG 2.2 AA 2.4.11** — the 55px sticky header covered a control tabbed to
+  near the top of the viewport. Fixed with `scroll-padding`, measured not
+  guessed.
+- **Validation errors were reported as server errors.** `schema.parse()` throws
+  a `ZodError`, which is not an `AppError`, so `toActionError` fell through to
+  "Something went wrong. Please try again." A customer with a mistyped postcode
+  was told to retry something guaranteed to fail. Zod rejections now become
+  per-field messages; the checkout address form shows each beside its input and
+  focuses a summary that links to them.
+
+Two findings were consciously declined, with reasons recorded: short product
+title links (covered by the inline and equivalent-control exceptions) and the
+generated palette/font recommendations (would discard the originality work).
+
+`tests/e2e/target-size.spec.ts` is new and measures every icon-only control,
+because axe does not report target size. An earlier draft flagged forty product
+titles; a test that cries wolf gets deleted, so it was narrowed to controls with
+no visible text, where no exception applies.
 
 ### M13 — deployment preparation
 - `docs/deployment.md` written: build and run, every variable, the webhook endpoint

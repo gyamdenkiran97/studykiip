@@ -108,6 +108,51 @@ test("the basket drawer moves focus into itself and closes on Escape", async ({ 
   await expect(dialog).not.toBeVisible();
 });
 
+test("a keyboard-focused control is never hidden behind the sticky header", async ({ browser }) => {
+  // WCAG 2.2 AA, 2.4.11 Focus Not Obscured. axe cannot see this: the element
+  // is perfectly visible in the DOM, it is simply underneath a sticky bar.
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, storageState: undefined });
+  const page = await context.newPage();
+
+  await page.goto("/shop");
+  await page.evaluate(() => window.scrollTo(0, 900));
+  await page.waitForTimeout(400);
+
+  const headerBottom = await page.evaluate(() => {
+    const header = document.querySelector("header.sticky") ?? document.querySelector("header");
+    return header ? header.getBoundingClientRect().bottom : 0;
+  });
+  expect(headerBottom).toBeGreaterThan(0);
+
+  // Walk the tab order and check each stop that lands inside the viewport.
+  const obscured: string[] = [];
+  for (let step = 0; step < 25; step += 1) {
+    await page.keyboard.press("Tab");
+    const found = await page.evaluate((limit) => {
+      const node = document.activeElement as HTMLElement | null;
+      if (!node || node === document.body) return null;
+
+      // A control inside the sticky bar is not obscured by it — it is part of
+      // it. Only content that scrolls underneath can be hidden.
+      for (let parent: HTMLElement | null = node; parent; parent = parent.parentElement) {
+        const position = getComputedStyle(parent).position;
+        if (position === "sticky" || position === "fixed") return null;
+      }
+
+      const box = node.getBoundingClientRect();
+      if (box.height === 0 || box.bottom < 0 || box.top > window.innerHeight) return null;
+      // Only a control whose top edge is under the header is actually hidden.
+      if (box.top >= limit || box.bottom <= 0) return null;
+      const label = (node.getAttribute("aria-label") ?? node.textContent ?? node.tagName).trim().slice(0, 40);
+      return `${node.tagName.toLowerCase()} "${label}" top=${Math.round(box.top)} < header ${Math.round(limit)}`;
+    }, headerBottom);
+    if (found) obscured.push(found);
+  }
+
+  expect(obscured, obscured.join("\n")).toEqual([]);
+  await context.close();
+});
+
 test("every image carries alt text", async ({ page }) => {
   await page.goto("/shop");
   await expect(page.locator("img:not([alt])")).toHaveCount(0);
