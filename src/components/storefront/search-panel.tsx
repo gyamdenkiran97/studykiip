@@ -21,21 +21,26 @@ export function SearchPanel({ trigger }: { trigger: React.ReactNode }) {
   const [recent, setRecent] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (!open) return;
+  function onOpenChange(next: boolean) {
+    setOpen(next);
+    if (!next) return;
+    // Read on open rather than in an effect: localStorage is synchronous, and
+    // this keeps the panel from rendering once without the recent searches.
     try {
       setRecent(JSON.parse(localStorage.getItem(RECENT_KEY) ?? "[]").slice(0, 5));
     } catch {
+      // Private browsing or blocked storage: recent searches are a nicety.
       setRecent([]);
     }
-  }, [open]);
+  }
+
+  const term = query.trim();
+  // Below the minimum length there is nothing to show, whatever the last
+  // response happened to contain. Derived rather than cleared through state.
+  const visible = term.length < 2 ? [] : suggestions;
 
   useEffect(() => {
-    const term = query.trim();
-    if (term.length < 2) {
-      setSuggestions([]);
-      return;
-    }
+    if (term.length < 2) return;
     const controller = new AbortController();
     const timer = setTimeout(async () => {
       setLoading(true);
@@ -55,7 +60,7 @@ export function SearchPanel({ trigger }: { trigger: React.ReactNode }) {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [query]);
+  }, [term]);
 
   function submit(term: string) {
     const trimmed = term.trim();
@@ -71,13 +76,13 @@ export function SearchPanel({ trigger }: { trigger: React.ReactNode }) {
   }
 
   const grouped = {
-    departments: suggestions.filter((item) => item.type === "category"),
-    brands: suggestions.filter((item) => item.type === "brand"),
-    products: suggestions.filter((item) => item.type === "product"),
+    departments: visible.filter((item) => item.type === "category"),
+    brands: visible.filter((item) => item.type === "brand"),
+    products: visible.filter((item) => item.type === "product"),
   };
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay
@@ -149,7 +154,7 @@ export function SearchPanel({ trigger }: { trigger: React.ReactNode }) {
                     </p>
                   )}
                 </div>
-              ) : suggestions.length === 0 && !loading ? (
+              ) : visible.length === 0 && !loading ? (
                 <div className="pb-6">
                   <p className="font-display text-lg text-ink">No matches for “{query.trim()}”</p>
                   <p className="mt-1.5 text-sm text-muted">

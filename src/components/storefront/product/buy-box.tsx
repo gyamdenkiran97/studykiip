@@ -30,7 +30,6 @@ export function BuyBox({
   productId,
   productTitle,
   brand,
-  slug,
   options,
   variants,
   images,

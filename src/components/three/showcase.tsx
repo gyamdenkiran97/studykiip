@@ -44,11 +44,12 @@ export function Showcase3D({
     if (reducedMotion || smallScreen || lowPower || saveData) return;
     if (!supportsWebGl()) return;
 
-    setDpr(Math.min(window.devicePixelRatio || 1, 1.75));
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          // Resolved here rather than in the effect body: the value is only
+          // read once the canvas mounts, which is exactly now.
+          setDpr(Math.min(window.devicePixelRatio || 1, 1.75));
           setEnabled(true);
           observer.disconnect();
         }

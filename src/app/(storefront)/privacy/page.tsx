@@ -25,7 +25,7 @@ export default function PrivacyPage() {
           the status of the order.
         </li>
         <li>
-          <strong>Payment references.</strong> The payment provider's identifier for the transaction, the card
+          <strong>Payment references.</strong> The payment provider&rsquo;s identifier for the transaction, the card
           brand and the last four digits. <strong>We never receive or store your full card number.</strong>
         </li>
         <li>
@@ -65,7 +65,7 @@ export default function PrivacyPage() {
       <p>
         Only the processors needed to run the shop: the payment provider (to take payment), the delivery
         carrier (name and address, to deliver), and the email provider (to send order emails). We do not sell
-        your data, and we do not share it for other companies' marketing.
+        your data, and we do not share it for other companies&rsquo; marketing.
       </p>
 
       <h2>How long we keep it</h2>

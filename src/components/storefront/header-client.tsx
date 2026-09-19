@@ -61,10 +61,14 @@ export function HeaderClient({
   // The provider's live count wins once the visitor has changed the basket.
   const count = cart.itemCount || cartCount;
 
-  useEffect(() => {
+  // Navigating closes any open menu. Adjusted during render rather than in an
+  // effect: the panels must not be painted open for a frame on the new page.
+  const [renderedPath, setRenderedPath] = useState(pathname);
+  if (renderedPath !== pathname) {
+    setRenderedPath(pathname);
     setOpenDepartment(null);
     setMobileOpen(false);
-  }, [pathname]);
+  }
 
   useEffect(() => {
     const onScroll = () => setCondensed(window.scrollY > 40);

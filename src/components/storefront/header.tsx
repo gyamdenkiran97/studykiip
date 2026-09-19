@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { getCategoryTree } from "@/server/catalog/queries";
 import { getCartCount } from "@/server/cart";
 import { getWishlistCount } from "@/server/wishlist";

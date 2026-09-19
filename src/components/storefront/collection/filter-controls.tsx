@@ -1,11 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { useCallback, useMemo, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import * as Accordion from "@radix-ui/react-accordion";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
-import { cn } from "@/lib/cn";
 import { formatMoney } from "@/lib/money";
 import { Button } from "@/components/ui/button";
 import { SORT_OPTIONS, type CatalogFacets, type SortKey } from "@/server/catalog/types";
@@ -183,8 +182,16 @@ function FilterSections({ facets }: { facets: CatalogFacets }) {
   // The URL is the source of truth, but navigation is asynchronous. Mirroring
   // it in local state lets a checkbox respond to the click immediately instead
   // of appearing stuck until the new page arrives.
+  //
+  // The mirror is re-synced during render rather than in an effect: once the
+  // navigation lands, the controls must already agree with the URL on the first
+  // paint, or a filter cleared by the browser's Back button flickers back on.
   const [state, setState] = useState(urlState);
-  useEffect(() => setState(urlState), [urlState]);
+  const [mirrored, setMirrored] = useState(urlState);
+  if (mirrored !== urlState) {
+    setMirrored(urlState);
+    setState(urlState);
+  }
 
   const [minInput, setMinInput] = useState(urlState.min?.toString() ?? "");
   const [maxInput, setMaxInput] = useState(urlState.max?.toString() ?? "");

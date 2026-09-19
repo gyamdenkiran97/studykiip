@@ -5,7 +5,7 @@ import { requireActor } from "@/server/auth/session";
 import { listOrdersForUser } from "@/server/orders";
 import { prisma } from "@/server/db";
 import { formatMoney } from "@/lib/money";
-import { ORDER_STATUS_LABELS, type OrderStatus } from "@/server/orders/state-machine";
+import type { OrderStatus } from "@/server/orders/state-machine";
 import { OrderStatusPill } from "@/components/account/order-status-pill";
 
 export const metadata: Metadata = { title: "Your account", robots: { index: false, follow: false } };

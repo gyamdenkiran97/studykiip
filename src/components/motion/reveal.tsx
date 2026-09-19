@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/cn";
 
 /**
@@ -14,7 +14,26 @@ import { cn } from "@/lib/cn";
  * `clip-path` that hides the target also collapses the rectangle the observer
  * measures, so observing the clipped node means it can never become visible.
  * The outer element keeps its natural box; the inner one carries the effect.
+ *
+ * The hidden state is applied to the DOM node rather than held in React state.
+ * Content renders visible — which is what a visitor without JavaScript, and
+ * every crawler, sees — and the effect hides it only once it can be observed
+ * and animated back in. Doing that through `useState` would mean a second
+ * render of every revealed section on mount for a purely visual attribute.
  */
+
+const HIDDEN: Record<string, string> = {
+  rise: "translate-y-5 opacity-0",
+  fade: "opacity-0",
+  mask: "[clip-path:inset(0_0_100%_0)]",
+};
+
+const SHOWN: Record<string, string> = {
+  rise: "translate-y-0 opacity-100",
+  fade: "opacity-100",
+  mask: "[clip-path:inset(0_0_0_0)]",
+};
+
 export function Reveal({
   children,
   delay = 0,
@@ -27,40 +46,41 @@ export function Reveal({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [revealed, setRevealed] = useState(true);
+  const innerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const element = ref.current;
-    if (!element) return;
+    const inner = innerRef.current;
+    if (!element || !inner) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    setRevealed(false);
+    const hidden = HIDDEN[variant].split(" ");
+    const shown = SHOWN[variant].split(" ");
+
+    inner.classList.remove(...shown);
+    inner.classList.add(...hidden);
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setRevealed(true);
-          observer.disconnect();
-        }
+        if (!entry.isIntersecting) return;
+        inner.classList.remove(...hidden);
+        inner.classList.add(...shown);
+        observer.disconnect();
       },
       { rootMargin: "0px 0px -6% 0px", threshold: 0.05 },
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, []);
-
-  const effect: Record<string, string> = {
-    rise: revealed ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0",
-    fade: revealed ? "opacity-100" : "opacity-0",
-    mask: revealed ? "[clip-path:inset(0_0_0_0)]" : "[clip-path:inset(0_0_100%_0)]",
-  };
+  }, [variant]);
 
   return (
     <div ref={ref} className={className}>
       <div
+        ref={innerRef}
         style={{ transitionDelay: `${delay}ms` }}
         className={cn(
           "h-full transition-all duration-[850ms] ease-[var(--ease-out-soft)] motion-reduce:transition-none",
-          effect[variant],
+          SHOWN[variant],
         )}
       >
         {children}

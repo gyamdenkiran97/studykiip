@@ -27,12 +27,17 @@ export function ProductGallery({
   const stripRef = useRef<HTMLDivElement>(null);
 
   // Selecting a variant with its own photography jumps the gallery to it.
-  useEffect(() => {
-    if (!activeVariantId) return;
-    // The list is already ordered with the active colourway first.
-    const target = images.findIndex((image) => image.variantId !== null);
-    setIndex(target >= 0 ? target : 0);
-  }, [activeVariantId, images]);
+  // Adjusted during render rather than in an effect, so the old colourway is
+  // never painted for a frame after the new one has been chosen.
+  const [renderedVariantId, setRenderedVariantId] = useState(activeVariantId);
+  if (renderedVariantId !== activeVariantId) {
+    setRenderedVariantId(activeVariantId);
+    if (activeVariantId) {
+      // The list is already ordered with the active colourway first.
+      const target = images.findIndex((image) => image.variantId !== null);
+      setIndex(target >= 0 ? target : 0);
+    }
+  }
 
   useEffect(() => {
     const strip = stripRef.current;

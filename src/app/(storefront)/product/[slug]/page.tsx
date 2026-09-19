@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
-import * as Accordion from "@radix-ui/react-accordion";
 import { getProductBySlug, getRelatedProducts } from "@/server/catalog/queries";
 import { getWishlistProductIds } from "@/server/wishlist";
 import { getRecentlyViewed, recordProductView } from "@/server/activity/recently-viewed";

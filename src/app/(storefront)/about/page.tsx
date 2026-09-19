@@ -60,7 +60,7 @@ export default async function AboutPage() {
           <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-ink-soft">
             <p>
               Stock is real. When a product page says four left, four is what is on the shelf minus what is
-              already promised to other people's open orders. Nothing is oversold while you are typing your
+              already promised to other people&rsquo;s open orders. Nothing is oversold while you are typing your
               address.
             </p>
             <p>

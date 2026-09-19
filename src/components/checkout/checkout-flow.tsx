@@ -361,7 +361,7 @@ export function CheckoutFlow({
               <>
                   <p className="text-[13.5px] leading-relaxed text-muted">
                     Your order is created first so the amount you are charged is calculated by us, not sent
-                    from your browser. Card details are entered on the payment provider's own form and never
+                    from your browser. Card details are entered on the payment provider&rsquo;s own form and never
                     reach our servers.
                   </p>
                   <div className="mt-5 rounded-xs border border-line bg-paper-deep p-4">

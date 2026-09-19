@@ -617,7 +617,7 @@ async function seedPromotions(categoryIds: Map<string, string>) {
   log("promotions", `${COUPONS.length} coupons · 1 automatic promotion`);
 }
 
-async function seedContent(categoryIds: Map<string, string>) {
+async function seedContent() {
   await prisma.siteSetting.createMany({
     data: [
       { key: "store", value: { name: "Kiip Mall", tagline: "A department store for things worth keeping", supportEmail: "help@kiipmall.test", supportPhone: "+44 20 7946 0102", addressLines: ["Placeholder House", "1 Example Street", "London", "EC1A 1AA"], companyNumber: "PLACEHOLDER — supply before launch" } },
@@ -767,7 +767,7 @@ async function main() {
   });
   const people = await seedPeople();
   await seedPromotions(categoryIds);
-  await seedContent(categoryIds);
+  await seedContent();
   await seedSocialProof(productIds, people.customers);
 
   console.log("\nDemo data ready.\n");

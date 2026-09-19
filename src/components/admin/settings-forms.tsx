@@ -13,7 +13,6 @@ export function SettingsForms({
   store,
   commerce,
   seo,
-  social,
 }: {
   store?: Record<string, unknown>;
   commerce?: Record<string, unknown>;

@@ -182,7 +182,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
           <p>Awaiting payment.</p>
         )}
         <p className="mt-2">
-          Placeholder VAT and company details — these must be replaced with the real trading entity's
+          Placeholder VAT and company details — these must be replaced with the real trading entity&rsquo;s
           registration before this invoice is issued to a customer.
         </p>
       </footer>

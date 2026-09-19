@@ -150,7 +150,7 @@ function StripePaymentPanel({
     <div>
       <p className="text-[13.5px] leading-relaxed text-muted">
         You will be taken to our payment provider to enter your card details. Card numbers never reach Kiip
-        Mall's servers.
+        Mall&rsquo;s servers.
       </p>
       {error ? (
         <p role="alert" className="mt-3 text-[13px] text-danger">

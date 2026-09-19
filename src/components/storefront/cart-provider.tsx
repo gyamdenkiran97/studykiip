@@ -64,7 +64,7 @@ export function CartProvider({
   }, [initialCart]);
 
   const run = useCallback(
-    async <T,>(
+    async (
       operation: () => Promise<
         { ok: true; data: CartView } | { ok: false; code: string; message: string }
       >,

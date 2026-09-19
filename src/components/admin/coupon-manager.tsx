@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { formatMoney, parseMoneyInput, toMoneyInput } from "@/lib/money";
 import { Button } from "@/components/ui/button";
-import { Field, Input, Select, Textarea } from "@/components/ui/field";
+import { Field, Input, Select } from "@/components/ui/field";
 import { Badge } from "@/components/ui/badge";
 import { Panel, Table, Td, Th } from "./ui";
 import { saveCouponAction, toggleCouponAction } from "@/server/actions/admin/marketing";
