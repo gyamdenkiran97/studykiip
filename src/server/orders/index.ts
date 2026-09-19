@@ -3,7 +3,13 @@ import { randomBytes } from "node:crypto";
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "../db";
 import { conflict, forbidden, notFound, outOfStock, validationError } from "../errors";
-import { computeBreakdown, effectivePrice, type PricingCoupon, type PricingLine } from "../pricing";
+import {
+  computeBreakdown,
+  effectivePrice,
+  isCouponUsable,
+  type PricingCoupon,
+  type PricingLine,
+} from "../pricing";
 import { commitReservation, releaseReservation, reserveStock } from "../inventory";
 import { logger } from "../logger";
 import { trackServerEvent } from "../analytics";
@@ -143,11 +149,7 @@ export async function createOrderFromCart(input: PlaceOrderInput) {
       let coupon: PricingCoupon | null = null;
       if (cart.coupon) {
         const c = cart.coupon;
-        const usable =
-          c.isActive &&
-          (!c.startsAt || c.startsAt <= now) &&
-          (!c.endsAt || c.endsAt >= now) &&
-          (c.usageLimit === null || c.timesUsed < c.usageLimit);
+        const usable = isCouponUsable(c);
 
         if (usable && c.usageLimitPerUser !== null) {
           const used = await tx.couponRedemption.count({ where: { couponId: c.id, userId: input.userId } });

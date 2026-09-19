@@ -199,3 +199,31 @@ export const COUPON_REJECTION_MESSAGES: Record<CouponRejection, string> = {
   MINIMUM_NOT_MET: "Your basket does not meet this code's minimum spend.",
   NO_ELIGIBLE_ITEMS: "This code does not apply to anything in your basket.",
 };
+
+/** The fields that decide whether a coupon may be used at all, independent of a basket. */
+export type CouponWindow = {
+  isActive: boolean;
+  startsAt: Date | null;
+  endsAt: Date | null;
+  usageLimit: number | null;
+  timesUsed: number;
+};
+
+/**
+ * Is this coupon usable right now?
+ *
+ * Deliberately one function rather than the same four conditions written out at
+ * each call site. The rule is applied twice — when a code is typed into the
+ * basket, and again inside the order transaction — and those two checks
+ * disagreeing is exactly how an expired code gets honoured at checkout.
+ *
+ * Boundaries are inclusive: a coupon is usable on the instant it starts and on
+ * the instant it ends.
+ */
+export function isCouponUsable(coupon: CouponWindow, now: Date = new Date()): boolean {
+  if (!coupon.isActive) return false;
+  if (coupon.startsAt && coupon.startsAt.getTime() > now.getTime()) return false;
+  if (coupon.endsAt && coupon.endsAt.getTime() < now.getTime()) return false;
+  if (coupon.usageLimit !== null && coupon.timesUsed >= coupon.usageLimit) return false;
+  return true;
+}

@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   computeBreakdown,
   effectivePrice,
+  isCouponUsable,
   isLineEligible,
+  type CouponWindow,
   type PricingCoupon,
   type PricingLine,
 } from "@/server/pricing";
@@ -162,5 +164,56 @@ describe("computeBreakdown", () => {
     expect(isLineEligible(l, coupon({ restrictions: [{ scope: "PRODUCT", targetId: "p9" }] }))).toBe(true);
     expect(isLineEligible(l, coupon({ restrictions: [{ scope: "BRAND", targetId: "b9" }] }))).toBe(true);
     expect(isLineEligible(l, coupon({ restrictions: [{ scope: "CATEGORY", targetId: "nope" }] }))).toBe(false);
+  });
+});
+
+describe("isCouponUsable", () => {
+  const NOW = new Date("2026-06-15T12:00:00Z");
+  const usable = (overrides: Partial<CouponWindow> = {}): CouponWindow => ({
+    isActive: true,
+    startsAt: null,
+    endsAt: null,
+    usageLimit: null,
+    timesUsed: 0,
+    ...overrides,
+  });
+
+  it("accepts an open-ended active coupon", () => {
+    expect(isCouponUsable(usable(), NOW)).toBe(true);
+  });
+
+  it("rejects a coupon that has been switched off", () => {
+    expect(isCouponUsable(usable({ isActive: false }), NOW)).toBe(false);
+  });
+
+  it("rejects a coupon whose campaign has not started", () => {
+    expect(isCouponUsable(usable({ startsAt: new Date("2026-06-16T00:00:00Z") }), NOW)).toBe(false);
+  });
+
+  it("rejects a coupon whose campaign has ended", () => {
+    expect(isCouponUsable(usable({ endsAt: new Date("2026-06-14T23:59:59Z") }), NOW)).toBe(false);
+  });
+
+  it("treats the window boundaries as inclusive", () => {
+    expect(isCouponUsable(usable({ startsAt: NOW }), NOW)).toBe(true);
+    expect(isCouponUsable(usable({ endsAt: NOW }), NOW)).toBe(true);
+  });
+
+  it("accepts a coupon inside its window", () => {
+    const coupon = usable({
+      startsAt: new Date("2026-06-01T00:00:00Z"),
+      endsAt: new Date("2026-06-30T23:59:59Z"),
+    });
+    expect(isCouponUsable(coupon, NOW)).toBe(true);
+  });
+
+  it("rejects a coupon that has been used up", () => {
+    expect(isCouponUsable(usable({ usageLimit: 100, timesUsed: 100 }), NOW)).toBe(false);
+    expect(isCouponUsable(usable({ usageLimit: 100, timesUsed: 101 }), NOW)).toBe(false);
+    expect(isCouponUsable(usable({ usageLimit: 100, timesUsed: 99 }), NOW)).toBe(true);
+  });
+
+  it("treats a null usage limit as unlimited", () => {
+    expect(isCouponUsable(usable({ usageLimit: null, timesUsed: 10_000 }), NOW)).toBe(true);
   });
 });

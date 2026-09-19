@@ -5,7 +5,13 @@ import { cache } from "react";
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "../db";
 import { conflict, notFound, outOfStock, validationError } from "../errors";
-import { computeBreakdown, effectivePrice, type PricingCoupon, type PricingLine } from "../pricing";
+import {
+  computeBreakdown,
+  effectivePrice,
+  isCouponUsable,
+  type PricingCoupon,
+  type PricingLine,
+} from "../pricing";
 import { getActor } from "../auth/session";
 import { logger } from "../logger";
 import { isProduction } from "../env";
@@ -307,7 +313,7 @@ export async function buildCartView(
   const pricedByVariant = new Map(breakdown.lines.map((line) => [line.variantId, line]));
 
   const toLine = (entry: (typeof meta)[number], savedForLater: boolean): CartLine => {
-    const { item, sellable, issue } = entry;
+    const { item, issue } = entry;
     const variant = item.variant;
     const product = variant.product;
     const price = effectivePrice(variant);
@@ -479,16 +485,8 @@ export async function applyCoupon(code: string): Promise<CartView> {
     include: { restrictions: true },
   });
 
-  const now = new Date();
-  const invalid =
-    !coupon ||
-    !coupon.isActive ||
-    (coupon.startsAt && coupon.startsAt > now) ||
-    (coupon.endsAt && coupon.endsAt < now) ||
-    (coupon.usageLimit !== null && coupon.timesUsed >= coupon.usageLimit);
-
   // One message for every failure mode: do not let the form enumerate codes.
-  if (invalid) throw validationError("That code is not valid.");
+  if (!coupon || !isCouponUsable(coupon)) throw validationError("That code is not valid.");
 
   const actor = await getActor();
   if (actor && coupon.usageLimitPerUser !== null) {

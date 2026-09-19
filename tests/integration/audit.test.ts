@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { testDb } from "./helpers/setup";
+import "./helpers/setup";
 import { createCustomer } from "./helpers/fixtures";
 import { listAudit, recordAudit } from "@/server/audit";
 

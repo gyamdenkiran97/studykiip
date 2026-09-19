@@ -36,9 +36,24 @@ test.describe("admin", () => {
     await page.waitForURL(/\/admin\/products\/[a-z0-9]+/, { timeout: 30_000 });
     await expect(page.getByRole("heading", { name: title })).toBeVisible();
 
-    // And it is really in the list.
+    // And it is really in the list, and really on the storefront.
     await page.goto(`/admin/products?q=${encodeURIComponent(title)}`);
     await expect(page.getByRole("link", { name: title })).toBeVisible();
+
+    const storefrontUrl = `/search?q=${encodeURIComponent(title)}`;
+    await page.goto(storefrontUrl);
+    await expect(page.getByRole("link", { name: new RegExp(title, "i") }).first()).toBeVisible();
+
+    // Archive it again. This covers the archive path, and it stops each run of
+    // the suite leaving another test product on the shop front.
+    await page.goto(`/admin/products?q=${encodeURIComponent(title)}`);
+    await page.getByRole("button", { name: "Product actions" }).first().click();
+    await page.getByRole("menuitem", { name: "Archive" }).click();
+    await expect(page.getByText(/product archived/i)).toBeVisible({ timeout: 20_000 });
+
+    // Archived means gone from the storefront but still readable in the back office.
+    await page.goto(storefrontUrl);
+    await expect(page.getByRole("link", { name: new RegExp(title, "i") })).toHaveCount(0);
   });
 
   test("stock can be adjusted and the new figure is shown", async ({ page }) => {
@@ -80,6 +95,58 @@ test.describe("admin", () => {
     await expect(page.getByText(/order status updated/i)).toBeVisible();
   });
 
+  test("a captured payment can be partially refunded", async ({ page }) => {
+    // Enter through the payments list so the order is guaranteed to have a
+    // captured payment — a refund against an order without one is refused.
+    await page.goto("/admin/payments?status=SUCCEEDED");
+    const orderLink = page.locator('a[href^="/admin/orders/"]').first();
+
+    if ((await orderLink.count()) === 0) {
+      test.skip(true, "No captured payment available to refund");
+      return;
+    }
+
+    await orderLink.click();
+    await page.waitForURL(/\/admin\/orders\/[a-z0-9]+/);
+
+    const panel = page.locator("section", { hasText: "Refund" }).last();
+    await expect(panel).toBeVisible();
+
+    // What is still refundable, before we take anything off it.
+    const before = await page.locator("#refundAmount").inputValue();
+    const beforeCents = Math.round(Number(before) * 100);
+    expect(beforeCents).toBeGreaterThan(100);
+
+    await page.fill("#refundAmount", "1.00");
+    await page.getByRole("button", { name: "Issue refund" }).click();
+    await expect(page.getByText(/refund issued/i)).toBeVisible({ timeout: 20_000 });
+
+    // The money actually moved: the order is partially refunded and the
+    // remaining refundable amount has dropped by exactly one pound.
+    await page.reload();
+    await expect(page.getByText(/partially refunded/i).first()).toBeVisible();
+    const after = await page.locator("#refundAmount").inputValue();
+    expect(Math.round(Number(after) * 100)).toBe(beforeCents - 100);
+  });
+
+  test("a refund larger than the order total is refused", async ({ page }) => {
+    await page.goto("/admin/payments?status=SUCCEEDED");
+    const orderLink = page.locator('a[href^="/admin/orders/"]').first();
+
+    if ((await orderLink.count()) === 0) {
+      test.skip(true, "No captured payment available to refund");
+      return;
+    }
+
+    await orderLink.click();
+    await page.waitForURL(/\/admin\/orders\/[a-z0-9]+/);
+    await expect(page.locator("#refundAmount")).toBeVisible();
+
+    await page.fill("#refundAmount", "99999.00");
+    await page.getByRole("button", { name: "Issue refund" }).click();
+    await expect(page.getByText(/more than the refundable amount/i)).toBeVisible();
+  });
+
   test("an invoice renders for an order", async ({ page }) => {
     await page.goto("/admin/orders");
     const firstOrder = page.locator('a[href^="/admin/orders/"]').first();
@@ -104,18 +171,38 @@ test.describe("admin", () => {
     await expect(page.getByText(code)).toBeVisible();
   });
 
-  test("a review can be moderated out of the queue", async ({ page }) => {
+  test("a review can be moderated in both directions", async ({ page }) => {
+    // Self-provisioning rather than dependent on a queue that earlier runs may
+    // have emptied: take a published review, reject it, then publish it back.
+    // A skipped test verifies nothing, and moderation is a critical flow.
+    await page.goto("/admin/reviews?status=PUBLISHED");
+    const reject = page.getByRole("button", { name: "Reject" }).first();
+    await expect(reject).toBeVisible();
+
+    await reject.click();
+    await expect(page.getByText(/review rejected/i)).toBeVisible({ timeout: 20_000 });
+
+    // It has genuinely left the published set and is in the rejected one.
+    await page.goto("/admin/reviews?status=REJECTED");
+    const publish = page.getByRole("button", { name: "Publish" }).first();
+    await expect(publish).toBeVisible();
+
+    await publish.click();
+    await expect(page.getByText(/review published/i)).toBeVisible({ timeout: 20_000 });
+  });
+
+  test("a pending review can be published from the queue", async ({ page }) => {
     await page.goto("/admin/reviews?status=PENDING");
     const publish = page.getByRole("button", { name: "Publish" }).first();
 
     if ((await publish.count()) === 0) {
-      test.skip(true, "Moderation queue is empty");
+      // Genuinely nothing waiting; the flow itself is covered by the test above.
+      await expect(page.getByText("The moderation queue is empty")).toBeVisible();
       return;
     }
 
     await publish.click();
-    await page.waitForTimeout(2500);
-    await expect(page.getByText(/review published/i)).toBeVisible();
+    await expect(page.getByText(/review published/i)).toBeVisible({ timeout: 20_000 });
   });
 
   test("administrative actions are recorded in the audit log", async ({ page }) => {
