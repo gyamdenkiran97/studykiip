@@ -24,7 +24,16 @@ export default async function AdminOrderPage({ params }: { params: Promise<{ id:
   if (!order) notFound();
 
   const status = order.status as OrderStatus;
-  const refundable = order.totalCents - order.refundedCents;
+  /**
+   * Refundable means there is money at the provider to send back — not merely
+   * that the order is worth something. An order whose payment was declined has
+   * a full balance and nothing to refund, and offering the panel there invites
+   * an action the server will always refuse.
+   */
+  const hasCapturedPayment = order.payments.some(
+    (payment) => payment.status === "SUCCEEDED" || payment.status === "PARTIALLY_REFUNDED",
+  );
+  const refundable = hasCapturedPayment ? order.totalCents - order.refundedCents : 0;
 
   return (
     <>

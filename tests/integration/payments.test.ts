@@ -279,6 +279,65 @@ describe("refunds", () => {
     expect(payment.status).toBe("PARTIALLY_REFUNDED");
   });
 
+  it("allows a second partial refund on an already partially refunded order", async () => {
+    // A customer returns one item, then another. The order stays at
+    // PARTIALLY_REFUNDED, and the state machine has no self-transitions — so
+    // this used to throw AFTER the amounts had been committed, leaving the
+    // provider refunded, the totals incremented and the refund row FAILED.
+    const { order } = await paidOrder();
+    const staff = await testDb.user.create({
+      data: { name: "Admin", email: `admin-${Math.random().toString(36).slice(2)}@example.test`, role: "ADMIN" },
+    });
+
+    await refundOrder({ orderId: order.id, amountCents: 2_000, actorId: staff.id });
+    await refundOrder({ orderId: order.id, amountCents: 1_500, actorId: staff.id });
+
+    const updated = await testDb.order.findUniqueOrThrow({ where: { id: order.id } });
+    expect(updated.refundedCents).toBe(3_500);
+    expect(updated.status).toBe("PARTIALLY_REFUNDED");
+
+    const payment = await testDb.payment.findFirstOrThrow({ where: { orderId: order.id } });
+    expect(payment.refundedCents).toBe(3_500);
+
+    // Both refunds succeeded, and the money is accounted for exactly once.
+    const refunds = await testDb.refund.findMany({ where: { orderId: order.id } });
+    expect(refunds).toHaveLength(2);
+    expect(refunds.every((refund) => refund.status === "SUCCEEDED")).toBe(true);
+    expect(refunds.reduce((total, refund) => total + refund.amountCents, 0)).toBe(3_500);
+  });
+
+  it("closes the order when a later partial refund settles the balance", async () => {
+    const { order, variant } = await paidOrder();
+    const staff = await testDb.user.create({
+      data: { name: "Admin", email: `admin-${Math.random().toString(36).slice(2)}@example.test`, role: "ADMIN" },
+    });
+
+    await refundOrder({ orderId: order.id, amountCents: 2_000, actorId: staff.id });
+    await refundOrder({ orderId: order.id, amountCents: order.totalCents - 2_000, actorId: staff.id });
+
+    const updated = await testDb.order.findUniqueOrThrow({ where: { id: order.id } });
+    expect(updated.status).toBe("REFUNDED");
+    expect(updated.refundedCents).toBe(order.totalCents);
+    expect(await availableStock(variant.id)).toBe(10);
+  });
+
+  it("leaves the totals untouched when a refund is refused", async () => {
+    const { order } = await paidOrder();
+    const staff = await testDb.user.create({
+      data: { name: "Admin", email: `admin-${Math.random().toString(36).slice(2)}@example.test`, role: "ADMIN" },
+    });
+
+    await expect(
+      refundOrder({ orderId: order.id, amountCents: order.totalCents + 1, actorId: staff.id }),
+    ).rejects.toThrow();
+
+    // Nothing moved: no refund row, no incremented totals, status unchanged.
+    const updated = await testDb.order.findUniqueOrThrow({ where: { id: order.id } });
+    expect(updated.refundedCents).toBe(0);
+    expect(updated.status).toBe("PAID");
+    expect(await testDb.refund.count({ where: { orderId: order.id } })).toBe(0);
+  });
+
   it("a full refund closes the order and returns the stock", async () => {
     const { order, variant } = await paidOrder();
     const staff = await testDb.user.create({

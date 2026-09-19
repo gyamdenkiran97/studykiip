@@ -4,6 +4,7 @@ import { prisma } from "../db";
 import { conflict, notFound, validationError } from "../errors";
 import { logger } from "../logger";
 import { markOrderPaid, transitionOrder } from "../orders";
+import { assertTransition, type OrderStatus } from "../orders/state-machine";
 import { sendEmail } from "../email/transport";
 import { orderConfirmationTemplate, paymentReceiptTemplate, refundTemplate } from "../email/templates";
 import { env } from "../env";
@@ -316,6 +317,23 @@ export async function refundOrder(input: {
     throw validationError("That is more than the amount still refundable on this order.");
   }
 
+  /**
+   * Work out where the order lands, and prove the move is legal, BEFORE any
+   * money leaves the provider.
+   *
+   * A second partial refund keeps the order at PARTIALLY_REFUNDED, and the
+   * state machine has no self-transitions — rightly, since a status that does
+   * not change is not a transition. Asking for one anyway used to throw after
+   * the amounts had already been committed, leaving the provider refunded, the
+   * order's refundedCents incremented, and the refund row marked FAILED. The
+   * status is simply left alone when it is already correct.
+   */
+  const currentStatus = order.status as OrderStatus;
+  const nextStatus: OrderStatus = order.refundedCents + input.amountCents >= order.totalCents
+    ? "REFUNDED"
+    : "PARTIALLY_REFUNDED";
+  if (nextStatus !== currentStatus) assertTransition(currentStatus, nextStatus);
+
   const provider = getPaymentProvider();
   const idempotencyKey = createHash("sha256")
     .update(`refund:${order.id}:${order.refundedCents}:${input.amountCents}`)
@@ -342,7 +360,7 @@ export async function refundOrder(input: {
     });
 
     const totalRefunded = order.refundedCents + input.amountCents;
-    const fullyRefunded = totalRefunded >= order.totalCents;
+    const fullyRefunded = nextStatus === "REFUNDED";
 
     await prisma.$transaction([
       prisma.refund.update({
@@ -362,12 +380,14 @@ export async function refundOrder(input: {
       }),
     ]);
 
-    await transitionOrder({
-      orderId: order.id,
-      to: fullyRefunded ? "REFUNDED" : "PARTIALLY_REFUNDED",
-      actorId: input.actorId,
-      note: input.reason ? `Refund: ${input.reason}` : "Refund issued",
-    });
+    if (nextStatus !== currentStatus) {
+      await transitionOrder({
+        orderId: order.id,
+        to: nextStatus,
+        actorId: input.actorId,
+        note: input.reason ? `Refund: ${input.reason}` : "Refund issued",
+      });
+    }
 
     await sendEmail({
       to: order.email,
