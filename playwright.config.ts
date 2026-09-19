@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { defineConfig, devices } from "@playwright/test";
 
 /**
@@ -8,6 +9,10 @@ import { defineConfig, devices } from "@playwright/test";
  *
  * CHROMIUM_PATH lets the suite use a browser already present on the machine
  * (the sandbox here ships one) instead of downloading its own.
+ *
+ * `.env` is loaded here because Next loads it for the app but the test runner
+ * has its own process — the admin fixtures need DATABASE_URL to build the paid
+ * order they act on.
  */
 const baseURL = process.env.E2E_BASE_URL ?? "http://localhost:3000";
 const executablePath = process.env.CHROMIUM_PATH;

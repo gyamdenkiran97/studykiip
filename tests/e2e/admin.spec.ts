@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { createPaidOrder, disconnectFixtures } from "./fixtures/paid-order";
 
 /**
  * Administrative flows, run with a stored administrator session.
@@ -6,6 +7,10 @@ import { expect, test } from "@playwright/test";
  * on the resulting state rather than on whether a button was rendered.
  */
 test.describe("admin", () => {
+  test.afterAll(async () => {
+    await disconnectFixtures();
+  });
+
   test("the dashboard shows trading metrics", async ({ page }) => {
     await page.goto("/admin");
     await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
@@ -71,80 +76,87 @@ test.describe("admin", () => {
   });
 
   test("an order can be moved along its state machine", async ({ page }) => {
-    await page.goto("/admin/orders?status=PAID");
-    const firstOrder = page.locator('a[href^="/admin/orders/"]').first();
-
-    if ((await firstOrder.count()) === 0) {
-      test.skip(true, "No paid order available to progress");
-      return;
-    }
-
-    await firstOrder.click();
-    await page.waitForURL(/\/admin\/orders\/[a-z0-9]+/);
+    const order = await createPaidOrder();
+    await page.goto(`/admin/orders/${order.id}`);
 
     const statusSelect = page.locator("#status");
     await expect(statusSelect).toBeVisible();
 
-    // Only transitions the machine permits are offered.
+    // Only transitions the machine permits are offered — a paid order can
+    // never be sent back to awaiting payment.
     const options = await statusSelect.locator("option").allTextContents();
     expect(options.length).toBeGreaterThan(0);
     expect(options.join(" ")).not.toContain("Awaiting payment");
 
     await page.getByRole("button", { name: "Update status" }).click();
-    await page.waitForTimeout(2500);
-    await expect(page.getByText(/order status updated/i)).toBeVisible();
+    await expect(page.getByText(/order status updated/i)).toBeVisible({ timeout: 20_000 });
   });
 
-  test("a captured payment can be partially refunded", async ({ page }) => {
-    // Enter through the payments list so the order is guaranteed to have a
-    // captured payment — a refund against an order without one is refused.
-    await page.goto("/admin/payments?status=SUCCEEDED");
-    const orderLink = page.locator('a[href^="/admin/orders/"]').first();
+  test("a captured payment can be partially refunded, and an over-refund refused", async ({ page }) => {
+    // Both assertions live in one test on purpose: issuing the partial refund
+    // changes the state the other one would need, so as separate tests the
+    // second would find nothing and skip — and a skipped test verifies nothing.
+    const order = await createPaidOrder();
+    await page.goto(`/admin/orders/${order.id}`);
+    await expect(page.locator("section", { hasText: "Refund" }).last()).toBeVisible();
 
-    if ((await orderLink.count()) === 0) {
-      test.skip(true, "No captured payment available to refund");
-      return;
-    }
+    const beforeCents = Math.round(Number(await page.locator("#refundAmount").inputValue()) * 100);
+    expect(beforeCents).toBe(order.totalCents);
 
-    await orderLink.click();
-    await page.waitForURL(/\/admin\/orders\/[a-z0-9]+/);
+    // More than the order is worth is refused, and nothing moves.
+    await page.fill("#refundAmount", "99999.00");
+    await page.getByRole("button", { name: "Issue refund" }).click();
+    await expect(page.getByText(/more than the refundable amount/i)).toBeVisible();
 
-    const panel = page.locator("section", { hasText: "Refund" }).last();
-    await expect(panel).toBeVisible();
-
-    // What is still refundable, before we take anything off it.
-    const before = await page.locator("#refundAmount").inputValue();
-    const beforeCents = Math.round(Number(before) * 100);
-    expect(beforeCents).toBeGreaterThan(100);
-
+    // A legitimate partial refund goes through.
     await page.fill("#refundAmount", "1.00");
     await page.getByRole("button", { name: "Issue refund" }).click();
     await expect(page.getByText(/refund issued/i)).toBeVisible({ timeout: 20_000 });
 
     // The money actually moved: the order is partially refunded and the
     // remaining refundable amount has dropped by exactly one pound.
-    await page.reload();
-    await expect(page.getByText(/partially refunded/i).first()).toBeVisible();
-    const after = await page.locator("#refundAmount").inputValue();
-    expect(Math.round(Number(after) * 100)).toBe(beforeCents - 100);
+    //
+    // Polled with a reload each time rather than asserted after a single one.
+    // The toast appears the moment the action returns, and a reload issued in
+    // that same instant can render before the refreshed data arrives — which
+    // says nothing about whether the refund worked.
+    await expect(async () => {
+      await page.reload();
+      await expect(page.getByText(/partially refunded/i).first()).toBeVisible();
+      const value = await page.locator("#refundAmount").inputValue();
+      expect(Math.round(Number(value) * 100)).toBe(beforeCents - 100);
+    }).toPass({ timeout: 20_000 });
+
+    // And a second partial refund on the same order still works — the status
+    // is already PARTIALLY_REFUNDED, which is not a transition, and asking the
+    // state machine for one used to throw after the money had already moved.
+    await page.fill("#refundAmount", "1.00");
+    await page.getByRole("button", { name: "Issue refund" }).click();
+    await expect(page.getByText(/refund issued/i)).toBeVisible({ timeout: 20_000 });
+
+    await expect(async () => {
+      await page.reload();
+      const value = await page.locator("#refundAmount").inputValue();
+      expect(Math.round(Number(value) * 100)).toBe(beforeCents - 200);
+    }).toPass({ timeout: 20_000 });
   });
 
-  test("a refund larger than the order total is refused", async ({ page }) => {
-    await page.goto("/admin/payments?status=SUCCEEDED");
+  test("an order whose payment was declined offers no refund", async ({ page }) => {
+    // A declined payment leaves a full outstanding balance, which is not the
+    // same as something to refund. The panel must not be offered at all.
+    await page.goto("/admin/orders?status=PENDING_PAYMENT");
     const orderLink = page.locator('a[href^="/admin/orders/"]').first();
 
     if ((await orderLink.count()) === 0) {
-      test.skip(true, "No captured payment available to refund");
+      // Nothing unpaid right now; the refund test above covers the paid side.
+      await expect(page.getByText(/no orders|nothing/i).first()).toBeVisible();
       return;
     }
 
     await orderLink.click();
     await page.waitForURL(/\/admin\/orders\/[a-z0-9]+/);
-    await expect(page.locator("#refundAmount")).toBeVisible();
-
-    await page.fill("#refundAmount", "99999.00");
-    await page.getByRole("button", { name: "Issue refund" }).click();
-    await expect(page.getByText(/more than the refundable amount/i)).toBeVisible();
+    await expect(page.getByRole("button", { name: "Issue refund" })).toHaveCount(0);
+    await expect(page.locator("#refundAmount")).toHaveCount(0);
   });
 
   test("an invoice renders for an order", async ({ page }) => {
