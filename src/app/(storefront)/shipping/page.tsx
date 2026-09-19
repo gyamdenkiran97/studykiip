@@ -5,7 +5,7 @@ import { LegalPage } from "@/components/storefront/legal/legal-page";
 
 export const metadata: Metadata = {
   title: "Delivery",
-  description: "Delivery options, costs and timescales for Kiip Mall orders.",
+  description: "Delivery options, costs and timescales for Kwidus21 orders.",
   alternates: { canonical: "/shipping" },
 };
 

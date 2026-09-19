@@ -9,7 +9,7 @@ import { cn } from "@/lib/cn";
 import { ProductImage } from "@/components/ui/product-image";
 import type { Suggestion } from "@/server/search/engine";
 
-const RECENT_KEY = "kiip:recent-searches";
+const RECENT_KEY = "kwidus21:recent-searches";
 
 /** Search overlay with debounced typeahead across products, brands and departments. */
 export function SearchPanel({ trigger }: { trigger: React.ReactNode }) {
@@ -96,7 +96,7 @@ export function SearchPanel({ trigger }: { trigger: React.ReactNode }) {
             inputRef.current?.focus();
           }}
         >
-          <Dialog.Title className="sr-only">Search Kiip Mall</Dialog.Title>
+          <Dialog.Title className="sr-only">Search Kwidus21</Dialog.Title>
           <Dialog.Description className="sr-only">
             Type at least two characters to see product, brand and department suggestions.
           </Dialog.Description>

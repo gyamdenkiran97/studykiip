@@ -3,7 +3,7 @@ import { LegalPage } from "@/components/storefront/legal/legal-page";
 
 export const metadata: Metadata = {
   title: "Terms",
-  description: "The terms on which Kiip Mall sells to you.",
+  description: "The terms on which Kwidus21 sells to you.",
   alternates: { canonical: "/terms" },
 };
 

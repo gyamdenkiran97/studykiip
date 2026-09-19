@@ -38,7 +38,7 @@ test.describe("authorisation", () => {
 
   test("the payment webhook refuses a wrongly signed request", async ({ request }) => {
     const response = await request.post("/api/webhooks/stripe", {
-      headers: { "x-kiip-signature": "deadbeef" },
+      headers: { "x-kwidus21-signature": "deadbeef" },
       data: { id: "evt_forged_2", type: "payment_intent.succeeded", data: { object: { id: "pi_forged" } } },
     });
     expect(response.status()).toBe(403);

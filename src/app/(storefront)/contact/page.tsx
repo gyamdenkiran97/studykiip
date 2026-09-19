@@ -5,7 +5,7 @@ import { ContactForm } from "@/components/storefront/contact-form";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "How to reach Kiip Mall about an order, a return or anything else.",
+  description: "How to reach Kwidus21 about an order, a return or anything else.",
   alternates: { canonical: "/contact" },
 };
 

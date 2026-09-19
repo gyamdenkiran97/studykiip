@@ -18,7 +18,7 @@ const step = (name, detail) => { steps.push(`${name}: ${detail}`); console.log(`
 try {
   // 1. Sign in
   await page.goto(`${BASE}/sign-in`, { waitUntil: "networkidle" });
-  await page.fill("#email", "customer@kiipmall.test");
+  await page.fill("#email", "customer@kwidus21.test");
   await page.fill("#password", "DemoCustomer!2026");
   await page.getByRole("button", { name: "Sign in" }).click();
   await page.waitForURL(/\/account/, { timeout: 20000 });

@@ -42,7 +42,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
 
       <header className="flex flex-wrap items-start justify-between gap-6 border-b border-line pb-6">
         <div>
-          <p className="font-display text-2xl leading-none font-semibold tracking-[-0.04em]">Kiip</p>
+          <p className="font-display text-2xl leading-none font-semibold tracking-[-0.04em]">Kwidus21</p>
           <address className="mt-3 text-[12px] leading-relaxed text-muted not-italic">
             {(store.addressLines ?? []).map((line) => (
               <span key={line} className="block">

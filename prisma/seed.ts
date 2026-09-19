@@ -205,7 +205,7 @@ async function seedTaxonomy() {
         imageUrl: heroUrl,
         imageAlt: `${category.name} — generated editorial artwork`,
         isFeatured: category.featured ?? false,
-        metaTitle: `${category.name} | Kiip Mall`,
+        metaTitle: `${category.name} | Kwidus21`,
         metaDescription: category.description,
       },
     });
@@ -225,8 +225,8 @@ async function seedTaxonomy() {
           position: childIndex,
           imageUrl: childHero,
           imageAlt: `${child.name} — generated editorial artwork`,
-          metaTitle: `${child.name} | ${category.name} | Kiip Mall`,
-          metaDescription: child.description ?? `Shop ${child.name.toLowerCase()} at Kiip Mall.`,
+          metaTitle: `${child.name} | ${category.name} | Kwidus21`,
+          metaDescription: child.description ?? `Shop ${child.name.toLowerCase()} at Kwidus21.`,
         },
       });
       categoryIds.set(child.slug, created.id);
@@ -242,7 +242,7 @@ async function seedTaxonomy() {
         description: brand.description,
         isFeatured: brand.featured ?? false,
         logoUrl: writeSvg(`brands/${brand.slug}.svg`, editorialImageSvg({ seed: brand.slug, palette: "oat", width: 600, height: 300 })),
-        metaTitle: `${brand.name} | Kiip Mall`,
+        metaTitle: `${brand.name} | Kwidus21`,
         metaDescription: brand.description,
       },
     });
@@ -296,7 +296,7 @@ async function seedProducts(ctx: {
         isFeatured: seed.featured ?? false,
         publishedAt: new Date(Date.now() - Math.floor(Math.random() * 90) * 86_400_000),
         tags: seed.tags,
-        metaTitle: `${seed.title} | ${BRANDS.find((b) => b.slug === seed.brand)?.name ?? "Kiip Mall"}`,
+        metaTitle: `${seed.title} | ${BRANDS.find((b) => b.slug === seed.brand)?.name ?? "Kwidus21"}`,
         metaDescription: seed.short,
         model3dUrl: seed.has3d ? `/media/models/${seed.slug}.glb` : null,
       },
@@ -330,7 +330,7 @@ async function seedProducts(ctx: {
           width: 600,
           height: 720,
           position: index,
-          credit: "Generated artwork, original to Kiip Mall",
+          credit: "Generated artwork, original to Kwidus21",
         },
       });
     }
@@ -431,7 +431,7 @@ async function seedProducts(ctx: {
               width: 600,
               height: 720,
               position: 10 + index,
-              credit: "Generated artwork, original to Kiip Mall",
+              credit: "Generated artwork, original to Kwidus21",
             },
           });
         }
@@ -521,8 +521,8 @@ async function seedPeople() {
     return user;
   }
 
-  const adminEmail = process.env.SEED_ADMIN_EMAIL ?? "admin@kiipmall.test";
-  const customerEmail = process.env.SEED_CUSTOMER_EMAIL ?? "customer@kiipmall.test";
+  const adminEmail = process.env.SEED_ADMIN_EMAIL ?? "admin@kwidus21.test";
+  const customerEmail = process.env.SEED_CUSTOMER_EMAIL ?? "customer@kwidus21.test";
 
   const owner = await createUser({
     name: "Rowan Vale",
@@ -532,13 +532,13 @@ async function seedPeople() {
   });
   const manager = await createUser({
     name: "Imani Osei",
-    email: "manager@kiipmall.test",
+    email: "manager@kwidus21.test",
     role: "MANAGER",
     password: credentials.admin.password,
   });
   const staff = await createUser({
     name: "Teodor Marek",
-    email: "staff@kiipmall.test",
+    email: "staff@kwidus21.test",
     role: "STAFF",
     password: credentials.admin.password,
   });
@@ -551,13 +551,13 @@ async function seedPeople() {
   });
   const customerTwo = await createUser({
     name: "Sana Qureshi",
-    email: "sana@kiipmall.test",
+    email: "sana@kwidus21.test",
     role: "CUSTOMER",
     password: credentials.customer.password,
   });
   const customerThree = await createUser({
     name: "Dermot Lynch",
-    email: "dermot@kiipmall.test",
+    email: "dermot@kwidus21.test",
     role: "CUSTOMER",
     password: credentials.customer.password,
   });
@@ -620,10 +620,10 @@ async function seedPromotions(categoryIds: Map<string, string>) {
 async function seedContent() {
   await prisma.siteSetting.createMany({
     data: [
-      { key: "store", value: { name: "Kiip Mall", tagline: "A department store for things worth keeping", supportEmail: "help@kiipmall.test", supportPhone: "+44 20 7946 0102", addressLines: ["Placeholder House", "1 Example Street", "London", "EC1A 1AA"], companyNumber: "PLACEHOLDER — supply before launch" } },
+      { key: "store", value: { name: "Kwidus21", tagline: "A department store for things worth keeping", supportEmail: "help@kwidus21.test", supportPhone: "+44 20 7946 0102", addressLines: ["Placeholder House", "1 Example Street", "London", "EC1A 1AA"], companyNumber: "PLACEHOLDER — supply before launch" } },
       { key: "commerce", value: { currency: CURRENCY, locale: "en-GB", defaultCountry: "GB", freeShippingThresholdCents: 5000, returnWindowDays: 30 } },
-      { key: "seo", value: { titleTemplate: "%s | Kiip Mall", defaultDescription: "A modern department store: fashion, electronics, beauty, home, furniture, sport and more.", twitterHandle: "@kiipmall" } },
-      { key: "social", value: { instagram: "https://example.com/kiipmall", pinterest: "https://example.com/kiipmall", email: "hello@kiipmall.test" } },
+      { key: "seo", value: { titleTemplate: "%s | Kwidus21", defaultDescription: "A modern department store: fashion, electronics, beauty, home, furniture, sport and more.", twitterHandle: "@kwidus21" } },
+      { key: "social", value: { instagram: "https://example.com/kwidus21", pinterest: "https://example.com/kwidus21", email: "hello@kwidus21.test" } },
       { key: "legal", value: { termsUpdatedAt: new Date().toISOString(), requiresLegalReview: true } },
     ],
   });
@@ -752,7 +752,7 @@ async function seedSocialProof(productIds: Map<string, string>, customers: Array
 }
 
 async function main() {
-  console.log("\nSeeding Kiip Mall demo data\n");
+  console.log("\nSeeding Kwidus21 demo data\n");
   await assertSafeToSeed();
   await resetDemoData();
 
@@ -775,10 +775,10 @@ async function main() {
     console.log("  Generated demo passwords (shown once — set SEED_ADMIN_PASSWORD /");
     console.log("  SEED_CUSTOMER_PASSWORD in .env to choose your own):\n");
     if (people.credentials.admin.generated) {
-      console.log(`    admin    ${process.env.SEED_ADMIN_EMAIL ?? "admin@kiipmall.test"}  ${people.credentials.admin.password}`);
+      console.log(`    admin    ${process.env.SEED_ADMIN_EMAIL ?? "admin@kwidus21.test"}  ${people.credentials.admin.password}`);
     }
     if (people.credentials.customer.generated) {
-      console.log(`    customer ${process.env.SEED_CUSTOMER_EMAIL ?? "customer@kiipmall.test"}  ${people.credentials.customer.password}`);
+      console.log(`    customer ${process.env.SEED_CUSTOMER_EMAIL ?? "customer@kwidus21.test"}  ${people.credentials.customer.password}`);
     }
     console.log("");
   }

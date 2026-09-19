@@ -28,7 +28,7 @@ import { isProduction } from "../env";
  * On sign-in the anonymous cart is merged into the account's cart.
  */
 
-export const CART_COOKIE = "kiip_cart";
+export const CART_COOKIE = "kwidus21_cart";
 const CART_COOKIE_MAX_AGE = 60 * 60 * 24 * 60; // 60 days
 const MAX_QUANTITY_PER_LINE = 20;
 

@@ -23,7 +23,7 @@ export default function GlobalError({
         }}
       >
         <div>
-          <h1 style={{ fontSize: "1.75rem", margin: 0 }}>Kiip Mall is temporarily unavailable</h1>
+          <h1 style={{ fontSize: "1.75rem", margin: 0 }}>Kwidus21 is temporarily unavailable</h1>
           <p style={{ marginTop: "0.75rem", color: "#6F6759" }}>
             Something failed while loading the page. Please try again in a moment.
           </p>

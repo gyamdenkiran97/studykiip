@@ -37,7 +37,7 @@ export class StripePaymentProvider implements PaymentProvider {
         currency: input.currency.toLowerCase(),
         automatic_payment_methods: { enabled: true },
         receipt_email: input.customerEmail,
-        description: `Kiip Mall order ${input.orderNumber}`,
+        description: `Kwidus21 order ${input.orderNumber}`,
         metadata: { orderId: input.orderId, orderNumber: input.orderNumber },
       },
       { idempotencyKey: input.idempotencyKey },

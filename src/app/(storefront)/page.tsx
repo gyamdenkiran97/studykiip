@@ -28,7 +28,7 @@ import { OrganizationJsonLd } from "@/components/seo/json-ld";
  */
 
 export const metadata: Metadata = {
-  title: "Kiip Mall — a department store for things worth keeping",
+  title: "Kwidus21 — a department store for things worth keeping",
   description:
     "Eleven departments under one roof: fashion, electronics, beauty, home and living, furniture, sport, accessories, food, toys, office and automotive.",
   alternates: { canonical: "/" },

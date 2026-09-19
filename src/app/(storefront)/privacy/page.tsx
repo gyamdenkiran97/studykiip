@@ -3,7 +3,7 @@ import { LegalPage } from "@/components/storefront/legal/legal-page";
 
 export const metadata: Metadata = {
   title: "Privacy",
-  description: "What data Kiip Mall collects, why, and what you can ask us to do with it.",
+  description: "What data Kwidus21 collects, why, and what you can ask us to do with it.",
   alternates: { canonical: "/privacy" },
 };
 

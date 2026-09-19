@@ -12,7 +12,7 @@ const problems = [];
 page.on("pageerror", (error) => problems.push(`pageerror: ${error.message.slice(0, 140)}`));
 
 await page.goto(`${BASE}/sign-in`, { waitUntil: "networkidle" });
-await page.fill("#email", "admin@kiipmall.test");
+await page.fill("#email", "admin@kwidus21.test");
 await page.fill("#password", "DemoAdmin!2026");
 await page.getByRole("button", { name: "Sign in" }).click();
 await page.waitForTimeout(3000);

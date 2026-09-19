@@ -26,7 +26,7 @@ const schema = z.object({
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
 
   RESEND_API_KEY: z.string().optional(),
-  EMAIL_FROM: z.string().default("Kiip Mall <no-reply@kiipmall.test>"),
+  EMAIL_FROM: z.string().default("Kwidus21 <no-reply@kwidus21.test>"),
 
   UPSTASH_REDIS_REST_URL: z.string().optional(),
   UPSTASH_REDIS_REST_TOKEN: z.string().optional(),

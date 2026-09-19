@@ -83,7 +83,7 @@ docs/
 ## Key flows
 
 ### Cart
-An anonymous visitor gets a signed, HttpOnly `kiip_cart` cookie holding a random
+An anonymous visitor gets a signed, HttpOnly `kwidus21_cart` cookie holding a random
 token; the cart row is keyed by that token. On login the anonymous cart is merged
 into the user's cart (quantities summed, capped at available stock) and the token
 cart is marked converted. Cart *items* store only `variantId` and `quantity` —

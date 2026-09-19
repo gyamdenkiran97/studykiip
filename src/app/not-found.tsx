@@ -13,7 +13,7 @@ export default function RootNotFound() {
             href="/"
             className="mt-6 inline-block bg-ink px-5 py-3 text-sm font-medium text-paper hover:bg-ink-soft"
           >
-            Back to Kiip Mall
+            Back to Kwidus21
           </Link>
         </div>
       </body>

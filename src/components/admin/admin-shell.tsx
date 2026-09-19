@@ -101,7 +101,7 @@ export function AdminShell({
     <div className="flex h-full flex-col">
       <div className="px-5 py-5">
         <Link href="/admin" className="flex items-baseline gap-2">
-          <span className="font-display text-xl leading-none font-semibold tracking-[-0.04em]">Kiip</span>
+          <span className="font-display text-xl leading-none font-semibold tracking-[-0.04em]">Kwidus21</span>
           <span className="text-[10px] tracking-[0.22em] text-muted uppercase">Admin</span>
         </Link>
       </div>
@@ -177,7 +177,7 @@ export function AdminShell({
             >
               <Menu size={19} strokeWidth={1.6} />
             </button>
-            <span className="font-display text-lg">Kiip Admin</span>
+            <span className="font-display text-lg">Kwidus21 Admin</span>
           </header>
 
           {mobileOpen ? (

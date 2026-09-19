@@ -12,7 +12,7 @@ export function verifyEmailTemplate(input: { name: string; url: string }): Build
     template: "verify-email",
     subject: "Confirm your email address",
     html: emailLayout({
-      preheader: "One step to finish setting up your Kiip Mall account.",
+      preheader: "One step to finish setting up your Kwidus21 account.",
       heading: `Welcome, ${input.name.split(" ")[0]}`,
       bodyHtml:
         p("Confirm this address and your account is ready to use.") +
@@ -42,7 +42,7 @@ export function passwordResetTemplate(input: { name: string; url: string }): Bui
 export function welcomeTemplate(input: { name: string; shopUrl: string }): Build {
   return {
     template: "welcome",
-    subject: "Your Kiip Mall account is ready",
+    subject: "Your Kwidus21 account is ready",
     html: emailLayout({
       preheader: "Your account is ready.",
       heading: "You're in",
@@ -132,7 +132,7 @@ export function paymentReceiptTemplate(input: {
           ["Amount paid", formatMoney(input.amountCents, input.currency)],
         ]),
       button: { label: "View your order", href: input.url },
-      footerNote: "Card details are handled by our payment processor and are never stored by Kiip Mall.",
+      footerNote: "Card details are handled by our payment processor and are never stored by Kwidus21.",
     }),
   };
 }

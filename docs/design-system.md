@@ -77,7 +77,7 @@ which is usually what "AI-generated" design is missing.
 
 ## 2. The design language
 
-**Kiip Mall is a printed catalogue rendered in a browser.** Paper ground, ink
+**Kwidus21 is a printed catalogue rendered in a browser.** Paper ground, ink
 text, hairline rules, generous margins, and photography doing the work that
 gradients and glass would otherwise be asked to do.
 

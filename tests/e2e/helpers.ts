@@ -3,12 +3,12 @@ import type { Page } from "@playwright/test";
 /** Shared credentials and helpers for the end-to-end suite. */
 
 export const CUSTOMER = {
-  email: process.env.SEED_CUSTOMER_EMAIL ?? "customer@kiipmall.test",
+  email: process.env.SEED_CUSTOMER_EMAIL ?? "customer@kwidus21.test",
   password: process.env.SEED_CUSTOMER_PASSWORD ?? "DemoCustomer!2026",
 };
 
 export const ADMIN = {
-  email: process.env.SEED_ADMIN_EMAIL ?? "admin@kiipmall.test",
+  email: process.env.SEED_ADMIN_EMAIL ?? "admin@kwidus21.test",
   password: process.env.SEED_ADMIN_PASSWORD ?? "DemoAdmin!2026",
 };
 
@@ -34,7 +34,7 @@ export function uniqueAccount() {
   const stamp = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   return {
     name: "Test Person",
-    email: `e2e-${stamp}@kiipmall.test`,
+    email: `e2e-${stamp}@kwidus21.test`,
     password: "an adequately long passphrase",
   };
 }

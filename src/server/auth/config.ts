@@ -23,7 +23,7 @@ if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {
 }
 
 export const auth = betterAuth({
-  appName: "Kiip Mall",
+  appName: "Kwidus21",
   baseURL: env.BETTER_AUTH_URL,
   secret: env.BETTER_AUTH_SECRET,
   database: prismaAdapter(prisma, { provider: "postgresql" }),
@@ -96,7 +96,7 @@ export const auth = betterAuth({
       },
 
   advanced: {
-    cookiePrefix: "kiip",
+    cookiePrefix: "kwidus21",
     useSecureCookies: isProduction,
     defaultCookieAttributes: {
       httpOnly: true,

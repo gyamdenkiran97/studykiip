@@ -20,7 +20,7 @@ export function OrganizationJsonLd() {
       data={{
         "@context": "https://schema.org",
         "@type": "OnlineStore",
-        name: "Kiip Mall",
+        name: "Kwidus21",
         url,
         description: "A department store for things worth keeping.",
         potentialAction: {

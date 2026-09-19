@@ -46,7 +46,7 @@ test.describe("authentication", () => {
 
     const [known, unknown] = await Promise.all([
       attempt(CUSTOMER.email),
-      attempt(`nobody-${Date.now()}@kiipmall.test`),
+      attempt(`nobody-${Date.now()}@kwidus21.test`),
     ]);
 
     // Identical status and body: the endpoint cannot be used to discover which

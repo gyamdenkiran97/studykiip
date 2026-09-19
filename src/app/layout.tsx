@@ -27,14 +27,14 @@ const sans = Instrument_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   title: {
-    default: "Kiip Mall — a department store for things worth keeping",
-    template: "%s | Kiip Mall",
+    default: "Kwidus21 — a department store for things worth keeping",
+    template: "%s | Kwidus21",
   },
   description:
     "Eleven departments under one roof: fashion, electronics, beauty, home, furniture, sport, accessories and more.",
   openGraph: {
     type: "website",
-    siteName: "Kiip Mall",
+    siteName: "Kwidus21",
     locale: "en_GB",
   },
   twitter: { card: "summary_large_image" },

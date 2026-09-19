@@ -149,7 +149,7 @@ function StripePaymentPanel({
   return (
     <div>
       <p className="text-[13.5px] leading-relaxed text-muted">
-        You will be taken to our payment provider to enter your card details. Card numbers never reach Kiip
+        You will be taken to our payment provider to enter your card details. Card numbers never reach Kwidus21
         Mall&rsquo;s servers.
       </p>
       {error ? (

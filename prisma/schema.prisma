@@ -1,4 +1,4 @@
-// Kiip Mall — production data model.
+// Kwidus21 — production data model.
 // Money is ALWAYS stored as integer minor units (e.g. cents) + an ISO currency code.
 // Never floating point.
 

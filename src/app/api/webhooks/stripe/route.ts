@@ -18,7 +18,7 @@ export const runtime = "nodejs";
 export async function POST(request: Request) {
   const payload = await request.text();
   const signature =
-    request.headers.get("stripe-signature") ?? request.headers.get("x-kiip-signature");
+    request.headers.get("stripe-signature") ?? request.headers.get("x-kwidus21-signature");
 
   try {
     const event = await getPaymentProvider().parseWebhook({ payload, signature });

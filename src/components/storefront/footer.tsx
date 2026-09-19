@@ -25,7 +25,7 @@ export async function Footer() {
       <div className="shell py-16 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div>
-            <p className="font-display text-2xl leading-none font-semibold tracking-[-0.04em]">Kiip</p>
+            <p className="font-display text-2xl leading-none font-semibold tracking-[-0.04em]">Kwidus21</p>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted">
               A department store for things worth keeping. Eleven floors, one basket, and a returns
               policy written in plain English.
@@ -56,7 +56,7 @@ export async function Footer() {
             <FooterLink href="/shipping">Delivery</FooterLink>
             <FooterLink href="/returns">Returns &amp; refunds</FooterLink>
             <FooterLink href="/account/orders">Track an order</FooterLink>
-            <FooterLink href="/about">About Kiip</FooterLink>
+            <FooterLink href="/about">About Kwidus21</FooterLink>
           </FooterColumn>
 
           <div>
@@ -70,7 +70,7 @@ export async function Footer() {
 
         <div className="mt-14 flex flex-col gap-4 border-t border-line-strong pt-6 text-[12.5px] text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {storeInfo.name ?? "Kiip Mall"}. A demonstration store — company
+            © {new Date().getFullYear()} {storeInfo.name ?? "Kwidus21"}. A demonstration store — company
             details are placeholders.
           </p>
           <nav aria-label="Legal" className="flex flex-wrap gap-x-5 gap-y-2">

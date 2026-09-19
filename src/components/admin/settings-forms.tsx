@@ -61,7 +61,7 @@ export function SettingsForms({
           }}
         >
           <Field label="Store name" htmlFor="name">
-            <Input id="name" name="name" defaultValue={str(store, "name", "Kiip Mall")} required maxLength={120} />
+            <Input id="name" name="name" defaultValue={str(store, "name", "Kwidus21")} required maxLength={120} />
           </Field>
           <Field label="Tagline" htmlFor="tagline">
             <Input id="tagline" name="tagline" defaultValue={str(store, "tagline")} maxLength={200} />
@@ -152,7 +152,7 @@ export function SettingsForms({
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             void save("seo", {
-              titleTemplate: String(formData.get("titleTemplate") ?? "%s | Kiip Mall"),
+              titleTemplate: String(formData.get("titleTemplate") ?? "%s | Kwidus21"),
               defaultDescription: String(formData.get("defaultDescription") ?? ""),
               twitterHandle: String(formData.get("twitterHandle") ?? ""),
             });
@@ -162,7 +162,7 @@ export function SettingsForms({
             <Input
               id="titleTemplate"
               name="titleTemplate"
-              defaultValue={str(seo, "titleTemplate", "%s | Kiip Mall")}
+              defaultValue={str(seo, "titleTemplate", "%s | Kwidus21")}
               maxLength={120}
             />
           </Field>

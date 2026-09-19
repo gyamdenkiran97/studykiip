@@ -128,10 +128,9 @@ export function HeaderClient({
           <Link
             href="/"
             className="flex shrink-0 items-baseline gap-1.5 py-3.5"
-            aria-label="Kiip Mall — home"
+            aria-label="Kwidus21 — home"
           >
-            <span className="font-display text-[26px] leading-none font-semibold tracking-[-0.045em]">Kiip</span>
-            <span className="hidden text-[10px] tracking-[0.28em] text-muted uppercase sm:inline">Mall</span>
+            <span className="font-display text-[26px] leading-none font-semibold tracking-[-0.045em]">Kwidus21</span>
           </Link>
 
           <nav aria-label="Departments" className="ml-6 hidden lg:block">

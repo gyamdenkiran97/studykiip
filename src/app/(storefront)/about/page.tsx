@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Why Kiip Mall exists, how we choose what to sell, and what we will not do.",
+  description: "Why Kwidus21 exists, how we choose what to sell, and what we will not do.",
   alternates: { canonical: "/about" },
 };
 
@@ -22,7 +22,7 @@ export default async function AboutPage() {
           <p className="eyebrow text-clay">About</p>
           <h1 className="mt-5 text-display-1 text-balance">Things worth keeping</h1>
           <p className="mt-8 max-w-xl text-[17px] leading-relaxed text-ink-soft">
-            Kiip is a department store organised around a single question: will this still be in use in five
+            Kwidus21 is a department store organised around a single question: will this still be in use in five
             years? It is a harder test than it sounds, and it rules out most of what a shop like this could
             stock.
           </p>
@@ -101,7 +101,7 @@ export default async function AboutPage() {
       <section className="shell pb-16">
         <div className="max-w-2xl border-t border-line pt-8 text-[13px] leading-relaxed text-muted">
           <p>
-            Kiip Mall is a demonstration store. The brands, products and company details on this site are
+            Kwidus21 is a demonstration store. The brands, products and company details on this site are
             invented for the purpose of showing the software, and the imagery is generated artwork rather than
             product photography.
           </p>

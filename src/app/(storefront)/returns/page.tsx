@@ -4,7 +4,7 @@ import { LegalPage } from "@/components/storefront/legal/legal-page";
 
 export const metadata: Metadata = {
   title: "Returns & refunds",
-  description: "How to return an item to Kiip Mall, and how refunds work.",
+  description: "How to return an item to Kwidus21, and how refunds work.",
   alternates: { canonical: "/returns" },
 };
 

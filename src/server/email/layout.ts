@@ -42,7 +42,7 @@ export function emailLayout(options: {
 <tr><td align="center">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#FFFFFF;border:1px solid ${LINE};">
     <tr><td style="padding:28px 32px 0 32px;">
-      <span style="font:600 12px/1 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:${MUTED};">Kiip Mall</span>
+      <span style="font:600 12px/1 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:${MUTED};">Kwidus21</span>
     </td></tr>
     <tr><td style="padding:16px 32px 0 32px;">
       <h1 style="margin:0;font:600 26px/1.15 Georgia,'Times New Roman',serif;color:${INK};letter-spacing:-.01em;">${escapeHtml(heading)}</h1>
@@ -60,10 +60,10 @@ export function emailLayout(options: {
     <tr><td style="padding:28px 32px 28px 32px;">
       <div style="height:1px;background:${LINE};margin-bottom:16px"></div>
       <p style="margin:0;font:400 12px/1.6 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:${MUTED};">
-        ${escapeHtml(footerNote ?? "You are receiving this email because of an action taken on your Kiip Mall account.")}
+        ${escapeHtml(footerNote ?? "You are receiving this email because of an action taken on your Kwidus21 account.")}
       </p>
       <p style="margin:8px 0 0 0;font:400 12px/1.6 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:${MUTED};">
-        Kiip Mall · <a href="{{APP_URL}}" style="color:${CLAY};text-decoration:none;">kiipmall.example</a>
+        Kwidus21 · <a href="{{APP_URL}}" style="color:${CLAY};text-decoration:none;">kwidus21.example</a>
       </p>
     </td></tr>
   </table>
